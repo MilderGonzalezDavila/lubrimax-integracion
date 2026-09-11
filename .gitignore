@@ -1,14 +1,40 @@
+### Compiled y Build Outputs (Maven y Gradle) ###
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+.gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+bin/
+out/
 .kotlin
 
+### Microservices y Spring Boot (OpenFeign y Config) ###
+# Perfiles locales y variables de entorno
+application-local.yml
+application-local.properties
+application-*-local.yml
+.env
+.env.*
+
+# Logs de trazabilidad de red y depuración Feign
+*.log
+logs/
+*.out
+
+# Código generado por OpenAPI, Swagger y MapStruct
+target/generated-sources/
+target/generated-test-sources/
+
+# Testing de contratos y mocks HTTP
+wiremock/
+stubs/
+.wiremock/
+
 ### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
+.idea/
 *.iws
 *.iml
 *.ipr
@@ -28,12 +54,11 @@ target/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
 ### VS Code ###
 .vscode/
 
-### Mac OS ###
+### Operating Systems ###
 .DS_Store
+Thumbs.db
+*.tmp
