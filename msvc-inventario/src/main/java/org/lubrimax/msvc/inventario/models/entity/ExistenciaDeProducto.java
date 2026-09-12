@@ -56,8 +56,6 @@ public class ExistenciaDeProducto {
         this.saldo = saldo;
     }
 
-    // REGLAS DE NEGOCIO (MÉTODOS DEL AGREGADO)
-
     public BigDecimal disponible() {
         return this.saldo.disponible();
     }
@@ -100,8 +98,6 @@ public class ExistenciaDeProducto {
             return;
         }
 
-        // Si no existe reserva confirmada,
-        // el consumo solo puede usar stock disponible.
         if (!this.saldo.admiteConsumo(cantidad)) {
             throw new IllegalArgumentException(
                     "Stock disponible insuficiente o cantidad inválida para consumir");

@@ -15,7 +15,6 @@ public interface UsuarioService {
 
     void eliminar(Long id);
 
-    // Métodos específicos para coordinar reglas del dominio
     Usuario asignarRolAUsuario(Long usuarioId, Long rolId);
 
     Usuario cambiarEstado(Long usuarioId, String nuevoEstado);

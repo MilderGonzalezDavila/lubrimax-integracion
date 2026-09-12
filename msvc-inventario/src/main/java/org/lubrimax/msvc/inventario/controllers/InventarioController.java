@@ -52,8 +52,6 @@ public class InventarioController {
         return ResponseEntity.notFound().build();
     }
 
-    // El evento 'StockInsumoHabilitado' de Abastecimiento te envía estos datos directo por
-    // parámetros HTTP
     @PostMapping("/habilitar")
     public ResponseEntity<?> habilitarStock(
             @RequestParam Long productoId,

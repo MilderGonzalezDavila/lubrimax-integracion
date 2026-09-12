@@ -32,12 +32,11 @@ public class Proveedor {
 
     public Proveedor() {}
 
-    // Constructor práctico para registrar nuevos proveedores
     public Proveedor(String ruc, String razonSocial, String contacto) {
         this.ruc = ruc;
         this.razonSocial = razonSocial;
         this.contacto = contacto;
-        this.activo = true; // Por defecto inicia activo
+        this.activo = true;
     }
 
     public Long getId() {

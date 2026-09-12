@@ -45,10 +45,10 @@ public class PoliticaDelNegocioController {
             PoliticaDelNegocio politicaActualizada = service.agregarPromocion(id, promocion);
             return ResponseEntity.status(HttpStatus.CREATED).body(politicaActualizada);
         } catch (IllegalArgumentException | IllegalStateException e) {
-            // Convierte las violaciones de reglas de negocio en errores 400
+
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (RuntimeException e) {
-            // Maneja el caso en que el agregado no exista en la base de datos
+
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }

@@ -20,7 +20,7 @@ public class Rol {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Equivalente a RolId del diagrama
+    private Long id;
 
     private String nombre;
 
@@ -28,7 +28,6 @@ public class Rol {
     @CollectionTable(name = "rol_permisos", joinColumns = @JoinColumn(name = "rol_id"))
     private List<Permiso> permisos = new ArrayList<>();
 
-    // Comandos de dominio[cite: 3]
     public void otorgarPermiso(Permiso permiso) {
         this.permisos.add(permiso);
     }

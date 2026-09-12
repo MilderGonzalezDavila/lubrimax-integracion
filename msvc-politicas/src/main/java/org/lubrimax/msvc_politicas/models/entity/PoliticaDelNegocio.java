@@ -15,7 +15,7 @@ public class PoliticaDelNegocio {
     private Long id;
 
     @Version
-    private int version; // Control de concurrencia optimista requerido por el diagrama[cite: 3]
+    private int version;
 
     private String tipo;
     private double margen;

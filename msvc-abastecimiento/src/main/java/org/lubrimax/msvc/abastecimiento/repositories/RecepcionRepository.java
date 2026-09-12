@@ -9,7 +9,6 @@ public interface RecepcionRepository extends CrudRepository<RecepcionDeMercaderi
 
     boolean existsByProveedorId(Long proveedorId);
 
-    // Método de búsqueda personalizado útil para el dominio
     List<RecepcionDeMercaderia> findByProveedorId(Long proveedorId);
 
     boolean existsByProveedorIdAndDocumento(Long proveedorId, String documento);

@@ -139,12 +139,11 @@ public class AbastecimientoServiceImpl implements AbastecimientoService {
     @Transactional
     public RecepcionDeMercaderia cerrarRecepcion(Long recepcionId) {
         RecepcionDeMercaderia recepcion = recepcionRepository.findById(recepcionId).get();
-        // El agregado valida que venga de un estado válido (CONFORME u OBSERVADA) para cerrarse
+
         recepcion.cerrar();
 
         RecepcionDeMercaderia recepcionGuardada = recepcionRepository.save(recepcion);
 
-        // Recorrer las lineas aprobadas y notificar al inventario
         for (LineaDeRecepcion linea : recepcionGuardada.getLineas()) {
             if (linea.getVerificacion() == ResultadoDeVerificacion.APROBADO) {
                 inventarioClienteRest.habilitarStock(

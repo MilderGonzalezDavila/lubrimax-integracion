@@ -44,10 +44,6 @@ public class ObservacionDeRecepcion {
         this.estado = EstadoDeObservacion.PENDIENTE;
     }
 
-    // ==========================================
-    // REGLAS DE NEGOCIO
-    // ==========================================
-
     public void resolver() {
         this.estado = EstadoDeObservacion.RESUELTO;
     }

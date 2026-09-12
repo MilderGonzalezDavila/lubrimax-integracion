@@ -34,12 +34,10 @@ public class AuditoriaServiceImpl implements AuditoriaService {
                         .findById(auditoriaId)
                         .orElseThrow(() -> new RuntimeException("Auditoría no encontrada"));
 
-        // Validamos la regla interna de la entidad antes de integrarla al agregado[cite: 1]
         if (!hallazgo.validarJustificacion()) {
             throw new IllegalArgumentException("El hallazgo requiere una justificación válida.");
         }
 
-        // El comando del agregado rechaza la operación si la auditoría está cerrada[cite: 1, 3]
         auditoria.registrarHallazgo(hallazgo);
 
         repository.save(auditoria);

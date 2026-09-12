@@ -45,8 +45,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     @Transactional
     public Usuario asignarRolAUsuario(Long usuarioId, Long rolId) {
-        // 1. LECTURA: La lectura de múltiples agregados es posible y necesaria para la lógica del
-        // negocio[cite: 6].
+
         Usuario usuario =
                 usuarioRepository
                         .findById(usuarioId)
@@ -56,11 +55,8 @@ public class UsuarioServiceImpl implements UsuarioService {
                         .findById(rolId)
                         .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
 
-        // 2. LÓGICA: Referencia mediante el ID del agregado
         usuario.setRolId(rol.getId());
 
-        // 3. ESCRITURA: La escritura está restringida: ¡solo podemos modificar una instancia de un
-        // agregado en una transacción de base de datos![cite: 6].
         return usuarioRepository.save(usuario);
     }
 
@@ -72,7 +68,6 @@ public class UsuarioServiceImpl implements UsuarioService {
                         .findById(usuarioId)
                         .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // Delegamos el cambio al comando de la entidad para que valide sus propias reglas
         usuario.cambiarEstado(nuevoEstado);
 
         return usuarioRepository.save(usuario);
