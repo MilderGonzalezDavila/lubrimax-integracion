@@ -17,18 +17,27 @@ public class ObservacionPreventiva {
     @Column(name = "momento_observacion", nullable = false)
     private LocalDateTime momento;
 
-    protected ObservacionPreventiva() {
-    }
+    protected ObservacionPreventiva() {}
 
     public ObservacionPreventiva(String tipo, String descripcion, LocalDateTime momento) {
-        if (tipo == null || tipo.isBlank()) throw new IllegalArgumentException("El tipo de observacion es obligatorio");
-        if (descripcion == null || descripcion.isBlank()) throw new IllegalArgumentException("La descripcion es obligatoria");
+        if (tipo == null || tipo.isBlank())
+            throw new IllegalArgumentException("El tipo de observacion es obligatorio");
+        if (descripcion == null || descripcion.isBlank())
+            throw new IllegalArgumentException("La descripcion es obligatoria");
         this.tipo = tipo.trim();
         this.descripcion = descripcion.trim();
         this.momento = momento == null ? LocalDateTime.now() : momento;
     }
 
-    public String getTipo() { return tipo; }
-    public String getDescripcion() { return descripcion; }
-    public LocalDateTime getMomento() { return momento; }
+    public String getTipo() {
+        return tipo;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public LocalDateTime getMomento() {
+        return momento;
+    }
 }

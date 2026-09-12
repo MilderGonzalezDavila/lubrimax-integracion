@@ -11,9 +11,12 @@ public class Kilometraje {
     protected Kilometraje() {}
 
     public Kilometraje(Long valor) {
-        if (valor == null || valor < 0) throw new IllegalArgumentException("El kilometraje no puede ser negativo");
+        if (valor == null || valor < 0)
+            throw new IllegalArgumentException("El kilometraje no puede ser negativo");
         this.valor = valor;
     }
 
-    public Long getValor() { return valor; }
+    public Long getValor() {
+        return valor;
+    }
 }

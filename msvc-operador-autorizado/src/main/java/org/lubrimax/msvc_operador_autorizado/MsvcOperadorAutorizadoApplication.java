@@ -6,8 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class MsvcOperadorAutorizadoApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(MsvcOperadorAutorizadoApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(MsvcOperadorAutorizadoApplication.class, args);
+    }
 }

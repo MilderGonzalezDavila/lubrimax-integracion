@@ -4,7 +4,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "msvc-abastecimiento", url = "http://localhost:8011/api/abastecimiento")
+@FeignClient(name = "msvc-abastecimiento", url = "http://localhost:8006/api/abastecimiento")
 public interface AbastecimientoClienteRest {
 
     @GetMapping("/existe-por-proveedor")

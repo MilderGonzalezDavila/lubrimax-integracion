@@ -10,8 +10,7 @@ public class ProximoServicio {
     private LocalDate fechaSugerida;
     private Long kilometrajeSugerido;
 
-    public ProximoServicio() {
-    }
+    public ProximoServicio() {}
 
     public boolean estaDefinido() {
         return fechaSugerida != null || kilometrajeSugerido != null;

@@ -1,5 +1,16 @@
 package org.lubrimax.msvc_auditorias.models.entity;
-import jakarta.persistence.*;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Version;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,10 +22,12 @@ public class AuditoriaDeControlInterno {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Version
-    private int version;
+    @Version private int version;
+
     private String periodo;
+
     private String estado;
+
     private Long usuarioIdResponsable;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -29,7 +42,8 @@ public class AuditoriaDeControlInterno {
 
     public void registrarHallazgo(HallazgoDeAuditoria hallazgo) {
         if ("CERRADA".equals(this.estado)) {
-            throw new IllegalStateException("No se pueden registrar hallazgos en una auditoría cerrada.");
+            throw new IllegalStateException(
+                    "No se pueden registrar hallazgos en una auditoría cerrada.");
         }
         this.hallazgos.add(hallazgo);
     }
@@ -37,7 +51,6 @@ public class AuditoriaDeControlInterno {
     public void cerrar() {
         this.estado = "CERRADA";
     }
-
 
     public String getEstado() {
         return estado;

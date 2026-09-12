@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface ExistenciaRepository extends CrudRepository<ExistenciaDeProducto, Long> {
 
-    Optional<ExistenciaDeProducto> findByProductoIdAndPresentacionId(Long productoId, Long presentacionId);
+    Optional<ExistenciaDeProducto> findByProductoIdAndPresentacionId(
+            Long productoId, Long presentacionId);
 }

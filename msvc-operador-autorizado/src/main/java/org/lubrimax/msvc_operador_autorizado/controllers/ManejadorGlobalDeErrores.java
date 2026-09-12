@@ -1,6 +1,7 @@
 package org.lubrimax.msvc_operador_autorizado.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,21 +16,24 @@ import java.util.Map;
 public class ManejadorGlobalDeErrores {
 
     @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})
-    public ResponseEntity<Map<String, Object>> manejarReglaDeNegocio(RuntimeException exception,
-                                                                     HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> manejarReglaDeNegocio(
+            RuntimeException exception, HttpServletRequest request) {
         return respuesta(HttpStatus.BAD_REQUEST, exception.getMessage(), request.getRequestURI());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> manejarValidacion(MethodArgumentNotValidException exception,
-                                                                  HttpServletRequest request) {
-        String mensaje = exception.getBindingResult().getFieldErrors().stream()
-                .findFirst().map(error -> error.getField() + ": " + error.getDefaultMessage())
-                .orElse("La solicitud contiene datos invalidos");
+    public ResponseEntity<Map<String, Object>> manejarValidacion(
+            MethodArgumentNotValidException exception, HttpServletRequest request) {
+        String mensaje =
+                exception.getBindingResult().getFieldErrors().stream()
+                        .findFirst()
+                        .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                        .orElse("La solicitud contiene datos invalidos");
         return respuesta(HttpStatus.BAD_REQUEST, mensaje, request.getRequestURI());
     }
 
-    private ResponseEntity<Map<String, Object>> respuesta(HttpStatus estado, String mensaje, String ruta) {
+    private ResponseEntity<Map<String, Object>> respuesta(
+            HttpStatus estado, String mensaje, String ruta) {
         Map<String, Object> cuerpo = new LinkedHashMap<>();
         cuerpo.put("timestamp", LocalDateTime.now());
         cuerpo.put("status", estado.value());

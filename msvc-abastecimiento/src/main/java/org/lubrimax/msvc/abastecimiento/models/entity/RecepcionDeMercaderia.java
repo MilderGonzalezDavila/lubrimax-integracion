@@ -1,14 +1,25 @@
 package org.lubrimax.msvc.abastecimiento.models.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotNull;
+
 import org.lubrimax.msvc.abastecimiento.models.EstadoDeObservacion;
 import org.lubrimax.msvc.abastecimiento.models.EstadoDeRecepcion;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Entity
 @Table(name = "recepciones_mercaderia")
@@ -17,10 +28,9 @@ public class RecepcionDeMercaderia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "recepcion_id")
-    private Long id; // Corresponde a RecepcionId id
+    private Long id;
 
-    @Version
-    private int version;
+    @Version private int version;
 
     @NotNull
     @Column(name = "proveedor_id", nullable = false)
@@ -47,8 +57,7 @@ public class RecepcionDeMercaderia {
     @JoinColumn(name = "recepcion_id")
     private List<LineaDeRecepcion> lineas = new ArrayList<>();
 
-    public RecepcionDeMercaderia() {
-    }
+    public RecepcionDeMercaderia() {}
 
     public RecepcionDeMercaderia(Long proveedorId, String documento) {
         if (proveedorId == null) {
@@ -75,11 +84,13 @@ public class RecepcionDeMercaderia {
             throw new IllegalStateException("La recepción ya está cerrada");
         }
 
-        boolean tienePendientes = this.observaciones.stream()
-                .anyMatch(obs -> obs.getEstado() != EstadoDeObservacion.RESUELTO);
+        boolean tienePendientes =
+                this.observaciones.stream()
+                        .anyMatch(obs -> obs.getEstado() != EstadoDeObservacion.RESUELTO);
 
         if (tienePendientes) {
-            throw new IllegalStateException("No se puede dar conformidad si existen observaciones pendientes");
+            throw new IllegalStateException(
+                    "No se puede dar conformidad si existen observaciones pendientes");
         }
 
         this.estado = EstadoDeRecepcion.CONFORME;
@@ -93,34 +104,75 @@ public class RecepcionDeMercaderia {
     }
 
     public void cerrar() {
-        if (this.estado != EstadoDeRecepcion.CONFORME && this.estado != EstadoDeRecepcion.OBSERVADO) {
-            throw new IllegalStateException("Solo se puede cerrar una recepción que esté CONFORME u OBSERVADA");
+        if (this.estado != EstadoDeRecepcion.CONFORME
+                && this.estado != EstadoDeRecepcion.OBSERVADO) {
+            throw new IllegalStateException(
+                    "Solo se puede cerrar una recepción que esté CONFORME u OBSERVADA");
         }
         this.estado = EstadoDeRecepcion.CERRADO;
     }
 
+    public Long getId() {
+        return id;
+    }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public int getVersion() { return version; }
-    public void setVersion(int version) { this.version = version; }
+    public int getVersion() {
+        return version;
+    }
 
-    public Long getProveedorId() { return proveedorId; }
-    public void setProveedorId(Long proveedorId) { this.proveedorId = proveedorId; }
+    public void setVersion(int version) {
+        this.version = version;
+    }
 
-    public String getDocumento() { return documento; }
-    public void setDocumento(String documento) { this.documento = documento; }
+    public Long getProveedorId() {
+        return proveedorId;
+    }
 
-    public EstadoDeRecepcion getEstado() { return estado; }
-    public void setEstado(EstadoDeRecepcion estado) { this.estado = estado; }
+    public void setProveedorId(Long proveedorId) {
+        this.proveedorId = proveedorId;
+    }
 
-    public LocalDate getFechaRecepcion() { return fechaRecepcion; }
-    public void setFechaRecepcion(LocalDate fechaRecepcion) { this.fechaRecepcion = fechaRecepcion; }
+    public String getDocumento() {
+        return documento;
+    }
 
-    public List<ObservacionDeRecepcion> getObservaciones() { return observaciones; }
-    public void setObservaciones(List<ObservacionDeRecepcion> observaciones) { this.observaciones = observaciones; }
+    public void setDocumento(String documento) {
+        this.documento = documento;
+    }
 
-    public List<LineaDeRecepcion> getLineas() { return lineas; }
-    public void setLineas(List<LineaDeRecepcion> lineas) { this.lineas = lineas; }
+    public EstadoDeRecepcion getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoDeRecepcion estado) {
+        this.estado = estado;
+    }
+
+    public LocalDate getFechaRecepcion() {
+        return fechaRecepcion;
+    }
+
+    public void setFechaRecepcion(LocalDate fechaRecepcion) {
+        this.fechaRecepcion = fechaRecepcion;
+    }
+
+    public List<ObservacionDeRecepcion> getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(List<ObservacionDeRecepcion> observaciones) {
+        this.observaciones = observaciones;
+    }
+
+    public List<LineaDeRecepcion> getLineas() {
+        return lineas;
+    }
+
+    public void setLineas(List<LineaDeRecepcion> lineas) {
+        this.lineas = lineas;
+    }
 }

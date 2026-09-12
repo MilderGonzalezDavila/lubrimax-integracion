@@ -1,6 +1,7 @@
 package org.lubrimax.msvc.clientes.controllers;
 
 import jakarta.validation.Valid;
+
 import org.lubrimax.msvc.clientes.models.entities.Cliente;
 import org.lubrimax.msvc.clientes.services.ClienteService;
 import org.springframework.http.HttpStatus;
@@ -48,14 +49,16 @@ public class ClienteController {
             return validar(result);
         }
         if (service.porNumeroDocumento(cliente.getNumeroDocumento()).isPresent()) {
-            return ResponseEntity.badRequest().body(Map.of("mensaje", "Ya existe un cliente con ese número de documento"));
+            return ResponseEntity.badRequest()
+                    .body(Map.of("mensaje", "Ya existe un cliente con ese número de documento"));
         }
         Cliente clienteGuardado = service.guardar(cliente);
         return ResponseEntity.status(HttpStatus.CREATED).body(clienteGuardado);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> editar(@PathVariable Long id, @Valid @RequestBody Cliente cliente, BindingResult result) {
+    public ResponseEntity<?> editar(
+            @PathVariable Long id, @Valid @RequestBody Cliente cliente, BindingResult result) {
         if (result.hasErrors()) {
             return validar(result);
         }
@@ -67,7 +70,8 @@ public class ClienteController {
 
         Cliente clienteActual = clienteOpt.get();
         if (!clienteActual.getNumeroDocumento().equals(cliente.getNumeroDocumento())) {
-            return ResponseEntity.badRequest().body(Map.of("mensaje", "El número de documento es inmutable"));
+            return ResponseEntity.badRequest()
+                    .body(Map.of("mensaje", "El número de documento es inmutable"));
         }
 
         clienteActual.actualizarDatosDeContacto(cliente.getNombre(), cliente.getTelefono());
@@ -85,9 +89,15 @@ public class ClienteController {
 
     private ResponseEntity<Map<String, String>> validar(BindingResult result) {
         Map<String, String> errores = new LinkedHashMap<>();
-        result.getFieldErrors().forEach(error ->
-                errores.put(error.getField(), "El campo " + error.getField() + " " + error.getDefaultMessage())
-        );
+        result.getFieldErrors()
+                .forEach(
+                        error ->
+                                errores.put(
+                                        error.getField(),
+                                        "El campo "
+                                                + error.getField()
+                                                + " "
+                                                + error.getDefaultMessage()));
         return ResponseEntity.badRequest().body(errores);
     }
 }

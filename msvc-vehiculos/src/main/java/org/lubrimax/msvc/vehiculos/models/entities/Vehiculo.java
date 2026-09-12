@@ -51,10 +51,13 @@ public class Vehiculo {
     @Column(nullable = false, length = 10)
     private EstadoVehiculo estado = EstadoVehiculo.ACTIVO;
 
-    public Vehiculo() {
-    }
+    public Vehiculo() {}
 
-    public void actualizarDatos(FichaTecnica fichaTecnica, Long clienteId, Long kilometrajeActual, EstadoVehiculo estado) {
+    public void actualizarDatos(
+            FichaTecnica fichaTecnica,
+            Long clienteId,
+            Long kilometrajeActual,
+            EstadoVehiculo estado) {
         this.fichaTecnica = fichaTecnica;
         this.clienteId = clienteId;
         this.kilometrajeActual = kilometrajeActual;

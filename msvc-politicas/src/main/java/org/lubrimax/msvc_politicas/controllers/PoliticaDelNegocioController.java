@@ -1,13 +1,18 @@
 package org.lubrimax.msvc_politicas.controllers;
 
-
 import org.lubrimax.msvc_politicas.models.entity.PoliticaDelNegocio;
 import org.lubrimax.msvc_politicas.models.entity.Promocion;
 import org.lubrimax.msvc_politicas.services.PoliticaDelNegocioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
@@ -15,8 +20,7 @@ import java.util.Optional;
 @RequestMapping("/api/politicas")
 public class PoliticaDelNegocioController {
 
-    @Autowired
-    private PoliticaDelNegocioService service;
+    @Autowired private PoliticaDelNegocioService service;
 
     @GetMapping("/{id}")
     public ResponseEntity<PoliticaDelNegocio> obtenerPorId(@PathVariable Long id) {
@@ -28,13 +32,15 @@ public class PoliticaDelNegocioController {
     }
 
     @PostMapping
-    public ResponseEntity<PoliticaDelNegocio> crearPolitica(@RequestBody PoliticaDelNegocio politica) {
+    public ResponseEntity<PoliticaDelNegocio> crearPolitica(
+            @RequestBody PoliticaDelNegocio politica) {
         PoliticaDelNegocio nuevaPolitica = service.crearPolitica(politica);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevaPolitica);
     }
 
     @PutMapping("/{id}/promociones")
-    public ResponseEntity<?> agregarPromocion(@PathVariable Long id, @RequestBody Promocion promocion) {
+    public ResponseEntity<?> agregarPromocion(
+            @PathVariable Long id, @RequestBody Promocion promocion) {
         try {
             PoliticaDelNegocio politicaActualizada = service.agregarPromocion(id, promocion);
             return ResponseEntity.status(HttpStatus.CREATED).body(politicaActualizada);

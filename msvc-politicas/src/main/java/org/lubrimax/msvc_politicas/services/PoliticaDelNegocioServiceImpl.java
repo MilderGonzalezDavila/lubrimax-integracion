@@ -12,8 +12,7 @@ import java.util.Optional;
 @Service
 public class PoliticaDelNegocioServiceImpl implements PoliticaDelNegocioService {
 
-    @Autowired
-    private PoliticaDelNegocioRepository repository;
+    @Autowired private PoliticaDelNegocioRepository repository;
 
     @Override
     @Transactional(readOnly = true)
@@ -30,11 +29,12 @@ public class PoliticaDelNegocioServiceImpl implements PoliticaDelNegocioService 
     @Override
     @Transactional
     public PoliticaDelNegocio agregarPromocion(Long politicaId, Promocion promocion) {
-        PoliticaDelNegocio politica = repository.findById(politicaId)
-                .orElseThrow(() -> new RuntimeException("Política no encontrada"));
+        PoliticaDelNegocio politica =
+                repository
+                        .findById(politicaId)
+                        .orElseThrow(() -> new RuntimeException("Política no encontrada"));
         politica.getPromociones().add(promocion);
         politica.renovar();
         return repository.save(politica);
     }
-
 }

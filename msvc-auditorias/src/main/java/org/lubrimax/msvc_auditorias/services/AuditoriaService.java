@@ -7,8 +7,10 @@ import java.util.Optional;
 
 public interface AuditoriaService {
     AuditoriaDeControlInterno crearAuditoria(AuditoriaDeControlInterno auditoria);
-    Optional<AuditoriaDeControlInterno> buscarPorId(Long id);
-    void registrarHallazgoExterno(Long auditoriaId, HallazgoDeAuditoria hallazgo);
-    AuditoriaDeControlInterno cerrarAuditoria(Long auditoriaId);
 
+    Optional<AuditoriaDeControlInterno> buscarPorId(Long id);
+
+    void registrarHallazgoExterno(Long auditoriaId, HallazgoDeAuditoria hallazgo);
+
+    AuditoriaDeControlInterno cerrarAuditoria(Long auditoriaId);
 }

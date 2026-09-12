@@ -14,14 +14,14 @@ public class Dinero {
     @Column(nullable = false, length = 3)
     private String moneda;
 
-    protected Dinero() {
-    }
+    protected Dinero() {}
 
     public Dinero(BigDecimal monto, String moneda) {
         if (monto == null || monto.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("El monto no puede ser negativo");
         }
-        if (moneda == null || moneda.isBlank()) throw new IllegalArgumentException("La moneda es obligatoria");
+        if (moneda == null || moneda.isBlank())
+            throw new IllegalArgumentException("La moneda es obligatoria");
         this.monto = monto;
         this.moneda = moneda.trim().toUpperCase();
     }
@@ -44,6 +44,11 @@ public class Dinero {
         }
     }
 
-    public BigDecimal getMonto() { return monto; }
-    public String getMoneda() { return moneda; }
+    public BigDecimal getMonto() {
+        return monto;
+    }
+
+    public String getMoneda() {
+        return moneda;
+    }
 }

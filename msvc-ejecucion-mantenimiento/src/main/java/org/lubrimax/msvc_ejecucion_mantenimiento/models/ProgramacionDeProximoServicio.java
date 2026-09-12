@@ -14,12 +14,12 @@ public class ProgramacionDeProximoServicio {
     @Column(name = "proximo_kilometraje")
     private Long kilometrajeSugerido;
 
-    protected ProgramacionDeProximoServicio() {
-    }
+    protected ProgramacionDeProximoServicio() {}
 
     public ProgramacionDeProximoServicio(LocalDate fechaSugerida, Long kilometrajeSugerido) {
         if (fechaSugerida == null && kilometrajeSugerido == null) {
-            throw new IllegalArgumentException("Debe indicar una fecha o un kilometraje para el proximo servicio");
+            throw new IllegalArgumentException(
+                    "Debe indicar una fecha o un kilometraje para el proximo servicio");
         }
         if (kilometrajeSugerido != null && kilometrajeSugerido < 0) {
             throw new IllegalArgumentException("El kilometraje sugerido no puede ser negativo");
@@ -28,6 +28,11 @@ public class ProgramacionDeProximoServicio {
         this.kilometrajeSugerido = kilometrajeSugerido;
     }
 
-    public LocalDate getFechaSugerida() { return fechaSugerida; }
-    public Long getKilometrajeSugerido() { return kilometrajeSugerido; }
+    public LocalDate getFechaSugerida() {
+        return fechaSugerida;
+    }
+
+    public Long getKilometrajeSugerido() {
+        return kilometrajeSugerido;
+    }
 }

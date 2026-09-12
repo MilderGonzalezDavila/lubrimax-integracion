@@ -13,11 +13,9 @@ import java.util.Optional;
 @Service
 public class ProveedorServiceImpl implements ProveedorService {
 
-    @Autowired
-    private ProveedorRepository proveedorRepository;
+    @Autowired private ProveedorRepository proveedorRepository;
 
-    @Autowired
-    private AbastecimientoClienteRest abastecimientoClienteRest;
+    @Autowired private AbastecimientoClienteRest abastecimientoClienteRest;
 
     @Override
     @Transactional(readOnly = true)
@@ -36,7 +34,8 @@ public class ProveedorServiceImpl implements ProveedorService {
     public Proveedor registrarProveedor(Proveedor proveedor) {
         Optional<Proveedor> existente = proveedorRepository.findByRuc(proveedor.getRuc());
         if (existente.isPresent() && !existente.get().getId().equals(proveedor.getId())) {
-            throw new IllegalArgumentException("Ya existe un proveedor registrado con el RUC: " + proveedor.getRuc());
+            throw new IllegalArgumentException(
+                    "Ya existe un proveedor registrado con el RUC: " + proveedor.getRuc());
         }
         return proveedorRepository.save(proveedor);
     }
@@ -45,7 +44,8 @@ public class ProveedorServiceImpl implements ProveedorService {
     @Transactional
     public void eliminarProveedorPorId(Long id) {
         if (abastecimientoClienteRest.existePorProveedorId(id)) {
-            throw new IllegalStateException("No se puede eliminar el proveedor porque ya cuenta con recepciones de mercancía registradas en el historial.");
+            throw new IllegalStateException(
+                    "No se puede eliminar el proveedor porque ya cuenta con recepciones de mercancía registradas en el historial.");
         }
         proveedorRepository.deleteById(id);
     }

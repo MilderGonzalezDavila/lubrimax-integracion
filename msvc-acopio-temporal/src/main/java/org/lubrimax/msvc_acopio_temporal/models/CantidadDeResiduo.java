@@ -15,8 +15,7 @@ public class CantidadDeResiduo {
     @Column(nullable = false, length = 20)
     private String unidad;
 
-    protected CantidadDeResiduo() {
-    }
+    protected CantidadDeResiduo() {}
 
     public CantidadDeResiduo(BigDecimal valor, String unidad) {
         if (valor == null || valor.compareTo(BigDecimal.ZERO) <= 0) {
@@ -36,12 +35,18 @@ public class CantidadDeResiduo {
 
     public void validarMismaUnidad(CantidadDeResiduo otra) {
         if (otra == null || !unidad.equals(otra.unidad)) {
-            throw new IllegalArgumentException("Las cantidades de residuo deben usar la misma unidad");
+            throw new IllegalArgumentException(
+                    "Las cantidades de residuo deben usar la misma unidad");
         }
     }
 
-    public BigDecimal getValor() { return valor; }
-    public String getUnidad() { return unidad; }
+    public BigDecimal getValor() {
+        return valor;
+    }
+
+    public String getUnidad() {
+        return unidad;
+    }
 
     @Override
     public boolean equals(Object otro) {

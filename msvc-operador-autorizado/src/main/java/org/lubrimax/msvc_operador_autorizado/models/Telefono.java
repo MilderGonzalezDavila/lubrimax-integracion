@@ -11,8 +11,7 @@ public class Telefono {
     @Column(name = "telefono", nullable = false, length = 15)
     private String numero;
 
-    protected Telefono() {
-    }
+    protected Telefono() {}
 
     public Telefono(String numero) {
         if (numero == null || !numero.matches("[0-9+ -]{7,15}")) {
@@ -27,8 +26,12 @@ public class Telefono {
 
     @Override
     public boolean equals(Object otro) {
-        if (this == otro) return true;
-        if (!(otro instanceof Telefono telefono)) return false;
+        if (this == otro) {
+            return true;
+        }
+        if (!(otro instanceof Telefono telefono)) {
+            return false;
+        }
         return Objects.equals(numero, telefono.numero);
     }
 

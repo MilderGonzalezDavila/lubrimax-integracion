@@ -6,8 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class MsvcAcopioTemporalApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(MsvcAcopioTemporalApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(MsvcAcopioTemporalApplication.class, args);
+    }
 }

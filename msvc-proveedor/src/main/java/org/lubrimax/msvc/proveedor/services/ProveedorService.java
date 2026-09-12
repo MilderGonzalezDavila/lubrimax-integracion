@@ -7,7 +7,10 @@ import java.util.Optional;
 
 public interface ProveedorService {
     List<Proveedor> listarProveedores();
+
     Optional<Proveedor> buscarProveedorPorId(Long id);
+
     Proveedor registrarProveedor(Proveedor proveedor);
+
     void eliminarProveedorPorId(Long id);
 }

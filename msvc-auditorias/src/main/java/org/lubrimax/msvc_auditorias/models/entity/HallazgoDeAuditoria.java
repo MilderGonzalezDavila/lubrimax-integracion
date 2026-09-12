@@ -1,5 +1,12 @@
 package org.lubrimax.msvc_auditorias.models.entity;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 import org.lubrimax.msvc_auditorias.models.values.Justificacion;
 
 @Entity
@@ -9,17 +16,19 @@ public class HallazgoDeAuditoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String tipo;
+
     private String referencia;
+
     private double magnitud;
 
-    @Embedded
-    private Justificacion justificacion;
+    @Embedded private Justificacion justificacion;
 
     public boolean validarJustificacion() {
-        return this.justificacion != null &&
-                this.justificacion.getMotivo() != null &&
-                !this.justificacion.getMotivo().trim().isEmpty();
+        return this.justificacion != null
+                && this.justificacion.getMotivo() != null
+                && !this.justificacion.getMotivo().trim().isEmpty();
     }
 
     public Long getId() {

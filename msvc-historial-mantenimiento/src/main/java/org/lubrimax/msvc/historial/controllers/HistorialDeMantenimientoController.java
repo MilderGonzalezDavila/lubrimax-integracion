@@ -1,7 +1,9 @@
 package org.lubrimax.msvc.historial.controllers;
 
 import feign.FeignException;
+
 import jakarta.validation.Valid;
+
 import org.lubrimax.msvc.historial.models.entities.HistorialDeMantenimiento;
 import org.lubrimax.msvc.historial.models.entities.RegistroMantenimiento;
 import org.lubrimax.msvc.historial.models.entities.ResumenHistorial;
@@ -45,7 +47,8 @@ public class HistorialDeMantenimientoController {
     @GetMapping("/{vehiculoId}/resumen")
     public ResponseEntity<?> resumen(@PathVariable Long vehiculoId) {
         return service.porVehiculoId(vehiculoId)
-                .<ResponseEntity<?>>map(historial -> ResponseEntity.ok(ResumenHistorial.desde(historial)))
+                .<ResponseEntity<?>>map(
+                        historial -> ResponseEntity.ok(ResumenHistorial.desde(historial)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
@@ -53,14 +56,14 @@ public class HistorialDeMantenimientoController {
     public ResponseEntity<?> registrarMantenimiento(
             @PathVariable Long vehiculoId,
             @Valid @RequestBody RegistroMantenimiento registro,
-            BindingResult result
-    ) {
+            BindingResult result) {
         if (result.hasErrors()) {
             return validar(result);
         }
 
         try {
-            HistorialDeMantenimiento historial = service.registrarMantenimiento(vehiculoId, registro);
+            HistorialDeMantenimiento historial =
+                    service.registrarMantenimiento(vehiculoId, registro);
             return ResponseEntity.status(HttpStatus.CREATED).body(historial);
         } catch (FeignException.NotFound exception) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -72,9 +75,15 @@ public class HistorialDeMantenimientoController {
 
     private ResponseEntity<Map<String, String>> validar(BindingResult result) {
         Map<String, String> errores = new LinkedHashMap<>();
-        result.getFieldErrors().forEach(error ->
-                errores.put(error.getField(), "El campo " + error.getField() + " " + error.getDefaultMessage())
-        );
+        result.getFieldErrors()
+                .forEach(
+                        error ->
+                                errores.put(
+                                        error.getField(),
+                                        "El campo "
+                                                + error.getField()
+                                                + " "
+                                                + error.getDefaultMessage()));
         return ResponseEntity.badRequest().body(errores);
     }
 }

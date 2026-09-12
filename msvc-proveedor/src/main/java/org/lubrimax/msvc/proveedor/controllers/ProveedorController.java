@@ -1,7 +1,9 @@
 package org.lubrimax.msvc.proveedor.controllers;
 
 import feign.FeignException;
+
 import jakarta.validation.Valid;
+
 import org.lubrimax.msvc.proveedor.models.entity.Proveedor;
 import org.lubrimax.msvc.proveedor.services.ProveedorService;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -39,19 +41,23 @@ public class ProveedorController {
     @PostMapping
     public ResponseEntity<?> registrarProveedor(@Valid @RequestBody Proveedor proveedor) {
         if (proveedor.getId() != null) {
-            return ResponseEntity.badRequest().body(Map.of("error", "El ID se genera al registrar el proveedor"));
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "El ID se genera al registrar el proveedor"));
         }
         try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(proveedorService.registrarProveedor(proveedor));
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(proveedorService.registrarProveedor(proveedor));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Error al procesar el registro del proveedor"));
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Error al procesar el registro del proveedor"));
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> actualizarProveedor(@PathVariable Long id, @Valid @RequestBody Proveedor proveedorRequest) {
+    public ResponseEntity<?> actualizarProveedor(
+            @PathVariable Long id, @Valid @RequestBody Proveedor proveedorRequest) {
         Optional<Proveedor> proveedorOptional = proveedorService.buscarProveedorPorId(id);
         if (proveedorOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -66,7 +72,8 @@ public class ProveedorController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Error al procesar la actualización del proveedor"));
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Error al procesar la actualización del proveedor"));
         }
     }
 
@@ -82,7 +89,10 @@ public class ProveedorController {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         } catch (FeignException e) {
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
-                    .body(Map.of("error", "No se pudo verificar el historial de recepciones del proveedor"));
+                    .body(
+                            Map.of(
+                                    "error",
+                                    "No se pudo verificar el historial de recepciones del proveedor"));
         }
     }
 }

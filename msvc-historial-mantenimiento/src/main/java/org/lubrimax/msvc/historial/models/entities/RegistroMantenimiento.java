@@ -64,12 +64,16 @@ public class RegistroMantenimiento {
     @Valid
     @NotEmpty(message = "debe contener al menos un servicio realizado")
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "registro_servicios_realizados", joinColumns = @JoinColumn(name = "registro_id"))
+    @CollectionTable(
+            name = "registro_servicios_realizados",
+            joinColumns = @JoinColumn(name = "registro_id"))
     private List<ServicioRealizadoResumen> serviciosRealizados = new ArrayList<>();
 
     @Valid
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "registro_productos_utilizados", joinColumns = @JoinColumn(name = "registro_id"))
+    @CollectionTable(
+            name = "registro_productos_utilizados",
+            joinColumns = @JoinColumn(name = "registro_id"))
     private List<ProductoUtilizadoResumen> productosUtilizados = new ArrayList<>();
 
     @Valid
@@ -77,8 +81,7 @@ public class RegistroMantenimiento {
     @Embedded
     private ProximoServicio proximoServicio;
 
-    public RegistroMantenimiento() {
-    }
+    public RegistroMantenimiento() {}
 
     public boolean correspondeAServicioCerrado() {
         return Boolean.TRUE.equals(servicioCerrado);

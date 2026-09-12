@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+
 import org.lubrimax.msvc_acopio_temporal.models.CantidadDeResiduo;
 import org.lubrimax.msvc_acopio_temporal.models.CapacidadDeAcopio;
 import org.lubrimax.msvc_acopio_temporal.models.CondicionDeAcopio;
@@ -37,8 +38,11 @@ public class AcopioTemporalController {
 
     @PostMapping
     public ResponseEntity<AcopioTemporal> crear(@Valid @RequestBody CrearAcopioRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.crear(request.tipoResiduo(),
-                new CapacidadDeAcopio(request.capacidad(), request.unidad())));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(
+                        service.crear(
+                                request.tipoResiduo(),
+                                new CapacidadDeAcopio(request.capacidad(), request.unidad())));
     }
 
     @GetMapping("/{tipo}")
@@ -47,22 +51,28 @@ public class AcopioTemporalController {
     }
 
     @PutMapping("/{tipo}/capacidad")
-    public AcopioTemporal configurarCapacidad(@PathVariable TipoDeResiduo tipo,
-                                               @Valid @RequestBody CapacidadRequest request) {
-        return service.configurarCapacidad(tipo, new CapacidadDeAcopio(request.capacidad(), request.unidad()));
+    public AcopioTemporal configurarCapacidad(
+            @PathVariable TipoDeResiduo tipo, @Valid @RequestBody CapacidadRequest request) {
+        return service.configurarCapacidad(
+                tipo, new CapacidadDeAcopio(request.capacidad(), request.unidad()));
     }
 
     @PostMapping("/{tipo}/residuos")
-    public ResponseEntity<ResiduoGenerado> registrarResiduo(@PathVariable TipoDeResiduo tipo,
-            @Valid @RequestBody RegistrarResiduoRequest request) {
-        ResiduoGenerado residuo = service.registrarResiduo(tipo, request.ordenId(),
-                request.declaracionOrigenId(), new CantidadDeResiduo(request.cantidad(), request.unidad()),
-                request.fechaGeneracion());
+    public ResponseEntity<ResiduoGenerado> registrarResiduo(
+            @PathVariable TipoDeResiduo tipo, @Valid @RequestBody RegistrarResiduoRequest request) {
+        ResiduoGenerado residuo =
+                service.registrarResiduo(
+                        tipo,
+                        request.ordenId(),
+                        request.declaracionOrigenId(),
+                        new CantidadDeResiduo(request.cantidad(), request.unidad()),
+                        request.fechaGeneracion());
         return ResponseEntity.status(HttpStatus.CREATED).body(residuo);
     }
 
     @PostMapping("/{tipo}/residuos/{residuoId}/almacenar")
-    public AcopioTemporal almacenar(@PathVariable TipoDeResiduo tipo, @PathVariable Long residuoId) {
+    public AcopioTemporal almacenar(
+            @PathVariable TipoDeResiduo tipo, @PathVariable Long residuoId) {
         return service.almacenar(tipo, residuoId);
     }
 
@@ -72,31 +82,50 @@ public class AcopioTemporalController {
     }
 
     @GetMapping("/{tipo}/residuos/{residuoId}")
-    public ResiduoGenerado obtenerResiduo(@PathVariable TipoDeResiduo tipo, @PathVariable Long residuoId) {
+    public ResiduoGenerado obtenerResiduo(
+            @PathVariable TipoDeResiduo tipo, @PathVariable Long residuoId) {
         return service.obtener(tipo).buscarResiduo(residuoId);
     }
 
     @GetMapping("/{tipo}/estado")
     public EstadoAcopioResponse consultarEstado(@PathVariable TipoDeResiduo tipo) {
         AcopioTemporal acopio = service.obtener(tipo);
-        return new EstadoAcopioResponse(tipo, acopio.cantidadAcopiada(), acopio.capacidadDisponible(),
-                acopio.getCapacidad().getUnidad(), acopio.condicionActual());
+        return new EstadoAcopioResponse(
+                tipo,
+                acopio.cantidadAcopiada(),
+                acopio.capacidadDisponible(),
+                acopio.getCapacidad().getUnidad(),
+                acopio.condicionActual());
     }
 
     @PostMapping("/{tipo}/entregas/confirmar")
-    public AcopioTemporal confirmarEntrega(@PathVariable TipoDeResiduo tipo,
-                                            @Valid @RequestBody ConfirmarEntregaRequest request) {
+    public AcopioTemporal confirmarEntrega(
+            @PathVariable TipoDeResiduo tipo, @Valid @RequestBody ConfirmarEntregaRequest request) {
         return service.confirmarEntrega(tipo, request.entregaId(), request.residuosIds());
     }
 
-    public record CrearAcopioRequest(@NotNull TipoDeResiduo tipoResiduo,
-                                      @NotNull @Positive BigDecimal capacidad, @NotNull String unidad) {}
-    public record CapacidadRequest(@NotNull @Positive BigDecimal capacidad, @NotNull String unidad) {}
-    public record RegistrarResiduoRequest(@NotNull Long ordenId, Long declaracionOrigenId,
-                                           @NotNull @Positive BigDecimal cantidad, @NotNull String unidad,
-                                           LocalDateTime fechaGeneracion) {}
-    public record ConfirmarEntregaRequest(@NotNull Long entregaId, @NotEmpty List<Long> residuosIds) {}
-    public record EstadoAcopioResponse(TipoDeResiduo tipoResiduo, BigDecimal cantidadAcopiada,
-                                        BigDecimal capacidadDisponible, String unidad,
-                                        CondicionDeAcopio condicion) {}
+    public record CrearAcopioRequest(
+            @NotNull TipoDeResiduo tipoResiduo,
+            @NotNull @Positive BigDecimal capacidad,
+            @NotNull String unidad) {}
+
+    public record CapacidadRequest(
+            @NotNull @Positive BigDecimal capacidad, @NotNull String unidad) {}
+
+    public record RegistrarResiduoRequest(
+            @NotNull Long ordenId,
+            Long declaracionOrigenId,
+            @NotNull @Positive BigDecimal cantidad,
+            @NotNull String unidad,
+            LocalDateTime fechaGeneracion) {}
+
+    public record ConfirmarEntregaRequest(
+            @NotNull Long entregaId, @NotEmpty List<Long> residuosIds) {}
+
+    public record EstadoAcopioResponse(
+            TipoDeResiduo tipoResiduo,
+            BigDecimal cantidadAcopiada,
+            BigDecimal capacidadDisponible,
+            String unidad,
+            CondicionDeAcopio condicion) {}
 }

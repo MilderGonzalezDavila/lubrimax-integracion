@@ -28,15 +28,37 @@ public class ConceptoAutorizado {
     @DecimalMin(value = "0.00", message = "no puede ser negativo")
     private BigDecimal precioAcordado;
 
-    public ConceptoAutorizado() {
+    public ConceptoAutorizado() {}
+
+    public TipoConcepto getTipo() {
+        return tipo;
     }
 
-    public TipoConcepto getTipo() { return tipo; }
-    public void setTipo(TipoConcepto tipo) { this.tipo = tipo; }
-    public Long getReferenciaId() { return referenciaId; }
-    public void setReferenciaId(Long referenciaId) { this.referenciaId = referenciaId; }
-    public Integer getCantidadAprobada() { return cantidadAprobada; }
-    public void setCantidadAprobada(Integer cantidadAprobada) { this.cantidadAprobada = cantidadAprobada; }
-    public BigDecimal getPrecioAcordado() { return precioAcordado; }
-    public void setPrecioAcordado(BigDecimal precioAcordado) { this.precioAcordado = precioAcordado; }
+    public void setTipo(TipoConcepto tipo) {
+        this.tipo = tipo;
+    }
+
+    public Long getReferenciaId() {
+        return referenciaId;
+    }
+
+    public void setReferenciaId(Long referenciaId) {
+        this.referenciaId = referenciaId;
+    }
+
+    public Integer getCantidadAprobada() {
+        return cantidadAprobada;
+    }
+
+    public void setCantidadAprobada(Integer cantidadAprobada) {
+        this.cantidadAprobada = cantidadAprobada;
+    }
+
+    public BigDecimal getPrecioAcordado() {
+        return precioAcordado;
+    }
+
+    public void setPrecioAcordado(BigDecimal precioAcordado) {
+        this.precioAcordado = precioAcordado;
+    }
 }

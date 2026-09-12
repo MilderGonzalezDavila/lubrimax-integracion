@@ -11,8 +11,7 @@ public class Ruc {
     @Column(name = "ruc", nullable = false, unique = true, length = 11)
     private String numero;
 
-    protected Ruc() {
-    }
+    protected Ruc() {}
 
     public Ruc(String numero) {
         if (numero == null || !numero.matches("\\d{11}")) {
@@ -27,8 +26,12 @@ public class Ruc {
 
     @Override
     public boolean equals(Object otro) {
-        if (this == otro) return true;
-        if (!(otro instanceof Ruc ruc)) return false;
+        if (this == otro) {
+            return true;
+        }
+        if (!(otro instanceof Ruc ruc)) {
+            return false;
+        }
         return Objects.equals(numero, ruc.numero);
     }
 

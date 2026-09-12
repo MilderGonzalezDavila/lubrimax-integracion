@@ -16,8 +16,7 @@ public class PeriodoDeTrabajo {
     @Column(name = "fin", nullable = false)
     private LocalDateTime fin;
 
-    protected PeriodoDeTrabajo() {
-    }
+    protected PeriodoDeTrabajo() {}
 
     public PeriodoDeTrabajo(LocalDateTime inicio, LocalDateTime fin) {
         if (inicio == null || fin == null) {
@@ -35,12 +34,18 @@ public class PeriodoDeTrabajo {
     }
 
     public boolean seSolapaCon(PeriodoDeTrabajo otro) {
-        if (otro == null) throw new IllegalArgumentException("El periodo a comparar es obligatorio");
+        if (otro == null)
+            throw new IllegalArgumentException("El periodo a comparar es obligatorio");
         return inicio.isBefore(otro.fin) && otro.inicio.isBefore(fin);
     }
 
-    public LocalDateTime getInicio() { return inicio; }
-    public LocalDateTime getFin() { return fin; }
+    public LocalDateTime getInicio() {
+        return inicio;
+    }
+
+    public LocalDateTime getFin() {
+        return fin;
+    }
 
     @Override
     public boolean equals(Object otro) {

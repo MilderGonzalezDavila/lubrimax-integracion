@@ -24,17 +24,24 @@ public class ManifiestoDeResiduos {
     @Column(name = "responsable_recepcion")
     private String responsableRecepcion;
 
-    protected ManifiestoDeResiduos() {
-    }
+    protected ManifiestoDeResiduos() {}
 
-    public ManifiestoDeResiduos(String numero, LocalDate fecha, BigDecimal cantidadTotal,
-                                String unidad, String responsableRecepcion) {
-        if (numero == null || numero.isBlank()) throw new IllegalArgumentException("El numero del manifiesto es obligatorio");
-        if (fecha == null) throw new IllegalArgumentException("La fecha del manifiesto es obligatoria");
+    public ManifiestoDeResiduos(
+            String numero,
+            LocalDate fecha,
+            BigDecimal cantidadTotal,
+            String unidad,
+            String responsableRecepcion) {
+        if (numero == null || numero.isBlank())
+            throw new IllegalArgumentException("El numero del manifiesto es obligatorio");
+        if (fecha == null)
+            throw new IllegalArgumentException("La fecha del manifiesto es obligatoria");
         if (cantidadTotal == null || cantidadTotal.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("La cantidad total del manifiesto debe ser mayor que cero");
+            throw new IllegalArgumentException(
+                    "La cantidad total del manifiesto debe ser mayor que cero");
         }
-        if (unidad == null || unidad.isBlank()) throw new IllegalArgumentException("La unidad del manifiesto es obligatoria");
+        if (unidad == null || unidad.isBlank())
+            throw new IllegalArgumentException("La unidad del manifiesto es obligatoria");
         if (responsableRecepcion == null || responsableRecepcion.isBlank()) {
             throw new IllegalArgumentException("El responsable de recepcion es obligatorio");
         }
@@ -45,9 +52,23 @@ public class ManifiestoDeResiduos {
         this.responsableRecepcion = responsableRecepcion.trim();
     }
 
-    public String getNumero() { return numero; }
-    public LocalDate getFecha() { return fecha; }
-    public BigDecimal getCantidadTotal() { return cantidadTotal; }
-    public String getUnidad() { return unidad; }
-    public String getResponsableRecepcion() { return responsableRecepcion; }
+    public String getNumero() {
+        return numero;
+    }
+
+    public LocalDate getFecha() {
+        return fecha;
+    }
+
+    public BigDecimal getCantidadTotal() {
+        return cantidadTotal;
+    }
+
+    public String getUnidad() {
+        return unidad;
+    }
+
+    public String getResponsableRecepcion() {
+        return responsableRecepcion;
+    }
 }

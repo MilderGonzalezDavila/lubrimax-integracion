@@ -9,11 +9,18 @@ import java.util.List;
 
 public interface AgendaDelTecnicoService {
     AgendaDelTecnico obtener(Long usuarioId);
+
     AsignacionDeTrabajo asignar(Long usuarioId, Long ordenId, PeriodoDeTrabajo periodo);
+
     boolean consultarDisponibilidad(Long usuarioId, PeriodoDeTrabajo periodo);
+
     AgendaDelTecnico iniciarAsignacion(Long usuarioId, Long asignacionId);
+
     AgendaDelTecnico liberarAsignacion(Long usuarioId, Long asignacionId);
+
     List<AsignacionDeTrabajo> listarPorTecnico(Long usuarioId);
+
     List<AsignacionDeTrabajo> listarPorFecha(LocalDate fecha);
+
     boolean tieneAsignacionValida(Long usuarioId, Long ordenId);
 }

@@ -20,15 +20,15 @@ import java.util.Optional;
 @Service
 public class InventarioServiceImpl implements InventarioService {
 
-    @Autowired
-    private ExistenciaRepository existenciaRepository;
+    @Autowired private ExistenciaRepository existenciaRepository;
 
     @Value("${inventario.reserva.duracion-minutos}")
     private long duracionReservaMinutos;
+
     @Override
     @Transactional(readOnly = true)
     public List<ExistenciaDeProducto> listar() {
-        return  (List<ExistenciaDeProducto>) existenciaRepository.findAll();
+        return (List<ExistenciaDeProducto>) existenciaRepository.findAll();
     }
 
     @Override
@@ -39,76 +39,63 @@ public class InventarioServiceImpl implements InventarioService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<ExistenciaDeProducto> buscarPorProductoPresentacion(Long productoId, Long presentacionId) {
+    public Optional<ExistenciaDeProducto> buscarPorProductoPresentacion(
+            Long productoId, Long presentacionId) {
         return existenciaRepository.findByProductoIdAndPresentacionId(productoId, presentacionId);
     }
 
     @Override
     @Transactional
-    public ExistenciaDeProducto habilitarStock(Long productoId, Long presentacionId, BigDecimal cantidad, Long recepcionId) {
-
+    public ExistenciaDeProducto habilitarStock(
+            Long productoId, Long presentacionId, BigDecimal cantidad, Long recepcionId) {
         if (cantidad == null || cantidad.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException(
-                    "La cantidad a habilitar debe ser mayor que cero"
-            );
+            throw new IllegalArgumentException("La cantidad a habilitar debe ser mayor que cero");
         }
-
         if (productoId == null) {
-            throw new IllegalArgumentException(
-                    "El producto es obligatorio"
-            );
+            throw new IllegalArgumentException("El producto es obligatorio");
         }
-
         if (presentacionId == null) {
-            throw new IllegalArgumentException(
-                    "La presentación es obligatoria"
-            );
+            throw new IllegalArgumentException("La presentación es obligatoria");
         }
-
         if (recepcionId == null) {
-            throw new IllegalArgumentException(
-                    "La recepción es obligatoria"
-            );
+            throw new IllegalArgumentException("La recepción es obligatoria");
         }
 
-        ExistenciaDeProducto existencia = existenciaRepository
-                .findByProductoIdAndPresentacionId(productoId, presentacionId)
-                .orElseGet(() -> {
-                    SaldoDeAlmacen saldoInicial = new SaldoDeAlmacen(BigDecimal.ZERO, BigDecimal.ZERO);
-                    return new ExistenciaDeProducto(productoId, presentacionId, saldoInicial);
-                });
+        ExistenciaDeProducto existencia =
+                existenciaRepository
+                        .findByProductoIdAndPresentacionId(productoId, presentacionId)
+                        .orElseGet(
+                                () -> {
+                                    SaldoDeAlmacen saldoInicial =
+                                            new SaldoDeAlmacen(BigDecimal.ZERO, BigDecimal.ZERO);
+                                    return new ExistenciaDeProducto(
+                                            productoId, presentacionId, saldoInicial);
+                                });
 
-        // 3. Evitar procesar dos veces la misma recepción
         boolean recepcionYaProcesada =
                 existencia.getMovimientos().stream()
-                        .anyMatch(movimiento ->
-                                movimiento.getTipo()
-                                        == TipoMovimiento.INGRESO
-                                        && "RECEPCION".equals(
-                                        movimiento.getOrigen()
-                                )
-                                        && Objects.equals(
-                                        movimiento.getReferenciaOrigen(),
-                                        recepcionId
-                                )
-                        );
+                        .anyMatch(
+                                movimiento ->
+                                        movimiento.getTipo() == TipoMovimiento.INGRESO
+                                                && "RECEPCION".equals(movimiento.getOrigen())
+                                                && Objects.equals(
+                                                        movimiento.getReferenciaOrigen(),
+                                                        recepcionId));
 
         if (recepcionYaProcesada) {
             return existencia;
         }
 
-        // Modificamos el saldo sumando la cantidad físicamente
         BigDecimal nuevoFisico = existencia.getSaldo().getFisico().add(cantidad);
         existencia.setSaldo(new SaldoDeAlmacen(nuevoFisico, existencia.getSaldo().getReservado()));
 
-        // Registramos el movimiento obligatorio según el diagrama
-        MovimientoDeStock movimiento = new MovimientoDeStock(
-                TipoMovimiento.INGRESO,
-                "RECEPCION",
-                cantidad,
-                MotivoDeAjuste.NINGUNO,
-                recepcionId
-        );
+        MovimientoDeStock movimiento =
+                new MovimientoDeStock(
+                        TipoMovimiento.INGRESO,
+                        "RECEPCION",
+                        cantidad,
+                        MotivoDeAjuste.NINGUNO,
+                        recepcionId);
         existencia.getMovimientos().add(movimiento);
 
         return existenciaRepository.save(existencia);
@@ -116,49 +103,45 @@ public class InventarioServiceImpl implements InventarioService {
 
     @Override
     @Transactional
-    public ExistenciaDeProducto reservar(
-            Long existenciaId,
-            Long ordenId,
-            BigDecimal cantidad) {
-
+    public ExistenciaDeProducto reservar(Long existenciaId, Long ordenId, BigDecimal cantidad) {
         ExistenciaDeProducto existencia =
-                existenciaRepository.findById(existenciaId)
-                        .orElseThrow(() ->
-                                new IllegalArgumentException(
-                                        "No se encontró la existencia con ID: "
-                                                + existenciaId
-                                )
-                        );
+                existenciaRepository
+                        .findById(existenciaId)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalArgumentException(
+                                                "No se encontró la existencia con ID: "
+                                                        + existenciaId));
 
-        LocalDateTime expiraEn =
-                LocalDateTime.now()
-                        .plusMinutes(duracionReservaMinutos);
-
-        existencia.reservar(
-                ordenId,
-                cantidad,
-                expiraEn
-        );
-
+        LocalDateTime expiraEn = LocalDateTime.now().plusMinutes(duracionReservaMinutos);
+        existencia.reservar(ordenId, cantidad, expiraEn);
         return existenciaRepository.save(existencia);
     }
 
     @Override
     @Transactional
     public ExistenciaDeProducto consumir(Long existenciaId, Long ordenId, BigDecimal cantidad) {
-        if (ordenId == null) { throw new IllegalArgumentException( "La orden es obligatoria para consumir stock" ); }
-        ExistenciaDeProducto existencia = existenciaRepository.findById(existenciaId)
-                .orElseThrow(() -> new IllegalArgumentException("No se encontró la existencia con ID: " + existenciaId));
+        if (ordenId == null) {
+            throw new IllegalArgumentException("La orden es obligatoria para consumir stock");
+        }
+        ExistenciaDeProducto existencia =
+                existenciaRepository
+                        .findById(existenciaId)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalArgumentException(
+                                                "No se encontró la existencia con ID: "
+                                                        + existenciaId));
 
-        existencia.consumir(ordenId,cantidad);
-        // Registramos el movimiento de salida
-        MovimientoDeStock movimiento = new MovimientoDeStock(
-                TipoMovimiento.SALIDA_CONSUMO,
-                "VENTA_ORDEN",
-                cantidad,
-                MotivoDeAjuste.NINGUNO,
-                ordenId
-        );
+        existencia.consumir(ordenId, cantidad);
+
+        MovimientoDeStock movimiento =
+                new MovimientoDeStock(
+                        TipoMovimiento.SALIDA_CONSUMO,
+                        "VENTA_ORDEN",
+                        cantidad,
+                        MotivoDeAjuste.NINGUNO,
+                        ordenId);
         existencia.getMovimientos().add(movimiento);
 
         return existenciaRepository.save(existencia);
@@ -167,21 +150,29 @@ public class InventarioServiceImpl implements InventarioService {
     @Override
     @Transactional
     public ExistenciaDeProducto confirmarReserva(Long existenciaId, Long ordenId) {
-
-        ExistenciaDeProducto existencia = existenciaRepository.findById(existenciaId)
-                        .orElseThrow(() -> new IllegalArgumentException( "No se encontró la existencia con ID: " + existenciaId)
-                        );
-
+        ExistenciaDeProducto existencia =
+                existenciaRepository
+                        .findById(existenciaId)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalArgumentException(
+                                                "No se encontró la existencia con ID: "
+                                                        + existenciaId));
         existencia.confirmarReserva(ordenId);
-
         return existenciaRepository.save(existencia);
     }
 
     @Override
     @Transactional
     public ExistenciaDeProducto liberarReserva(Long existenciaId, Long ordenId) {
-        ExistenciaDeProducto existencia = existenciaRepository.findById(existenciaId)
-                        .orElseThrow(() -> new IllegalArgumentException( "No se encontró la existencia con ID: " + existenciaId));
+        ExistenciaDeProducto existencia =
+                existenciaRepository
+                        .findById(existenciaId)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalArgumentException(
+                                                "No se encontró la existencia con ID: "
+                                                        + existenciaId));
         existencia.liberarReserva(ordenId);
         return existenciaRepository.save(existencia);
     }
@@ -191,5 +182,4 @@ public class InventarioServiceImpl implements InventarioService {
     public void eliminarPorId(Long id) {
         existenciaRepository.deleteById(id);
     }
-
 }

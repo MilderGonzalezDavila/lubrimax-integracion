@@ -10,22 +10,22 @@ import java.time.LocalDateTime;
 @Service
 public class ExpiracionReservasService {
 
-    @Autowired
-    private ExistenciaRepository existenciaRepository;
+    @Autowired private ExistenciaRepository existenciaRepository;
+
     @Transactional
     public void procesarExpiraciones() {
 
         LocalDateTime ahora = LocalDateTime.now();
 
-        existenciaRepository.findAll()
-                .forEach(existencia -> {
+        existenciaRepository
+                .findAll()
+                .forEach(
+                        existencia -> {
+                            int expiradas = existencia.expirarReservas(ahora);
 
-                    int expiradas =
-                            existencia.expirarReservas(ahora);
-
-                    if (expiradas > 0) {
-                        existenciaRepository.save(existencia);
-                    }
-                });
+                            if (expiradas > 0) {
+                                existenciaRepository.save(existencia);
+                            }
+                        });
     }
 }

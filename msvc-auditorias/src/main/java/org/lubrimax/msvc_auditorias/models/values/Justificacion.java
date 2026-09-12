@@ -19,7 +19,15 @@ public class Justificacion {
         this.momento = momento;
     }
 
-    public String getMotivo() { return motivo; }
-    public Long getUsuarioIdResponsable() { return usuarioIdResponsable; }
-    public LocalDateTime getMomento() { return momento; }
+    public String getMotivo() {
+        return motivo;
+    }
+
+    public Long getUsuarioIdResponsable() {
+        return usuarioIdResponsable;
+    }
+
+    public LocalDateTime getMomento() {
+        return momento;
+    }
 }

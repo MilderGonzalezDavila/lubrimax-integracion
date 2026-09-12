@@ -52,5 +52,12 @@
         <module>msvc-proveedor</module>
         <module>msvc-usuarios</module>
         <module>msvc-vehiculos</module>
+        <module>msvc-agregar-producto</module>
+        <module>msvc-comprobante</module>
+        <module>msvc-lista-precio-base</module>
+        <module>msvc-matriz-compatibilidad</module>
+        <module>msvc-nota-credito</module>
+        <module>msvc-serie-comprobante</module>
+        <module>msvc-servicio-mantenimiento</module>
     </modules>
 </project>

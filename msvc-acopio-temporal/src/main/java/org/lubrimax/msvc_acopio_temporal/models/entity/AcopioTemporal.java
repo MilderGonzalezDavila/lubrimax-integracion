@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
+
 import org.lubrimax.msvc_acopio_temporal.models.CantidadDeResiduo;
 import org.lubrimax.msvc_acopio_temporal.models.CapacidadDeAcopio;
 import org.lubrimax.msvc_acopio_temporal.models.CondicionDeAcopio;
@@ -30,44 +31,53 @@ public class AcopioTemporal {
     @Enumerated(EnumType.STRING)
     private TipoDeResiduo tipoDeResiduo;
 
-    @Version
-    private int version;
+    @Version private int version;
 
-    @Embedded
-    private CapacidadDeAcopio capacidad;
+    @Embedded private CapacidadDeAcopio capacidad;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "acopio_tipo_residuo", nullable = false)
     private List<ResiduoGenerado> residuos = new ArrayList<>();
 
-    protected AcopioTemporal() {
-    }
+    protected AcopioTemporal() {}
 
     public AcopioTemporal(TipoDeResiduo tipoDeResiduo, CapacidadDeAcopio capacidad) {
-        if (tipoDeResiduo == null) throw new IllegalArgumentException("El tipo de residuo es obligatorio");
-        if (capacidad == null) throw new IllegalArgumentException("La capacidad del acopio es obligatoria");
+        if (tipoDeResiduo == null) {
+            throw new IllegalArgumentException("El tipo de residuo es obligatorio");
+        }
+        if (capacidad == null) {
+            throw new IllegalArgumentException("La capacidad del acopio es obligatoria");
+        }
         this.tipoDeResiduo = tipoDeResiduo;
         this.capacidad = capacidad;
     }
 
-    public ResiduoGenerado registrarGeneracion(Long ordenId, Long declaracionOrigenId,
-                                                TipoDeResiduo tipo, CantidadDeResiduo cantidad,
-                                                LocalDateTime fechaGeneracion) {
+    public ResiduoGenerado registrarGeneracion(
+            Long ordenId,
+            Long declaracionOrigenId,
+            TipoDeResiduo tipo,
+            CantidadDeResiduo cantidad,
+            LocalDateTime fechaGeneracion) {
         if (tipo != tipoDeResiduo) {
             throw new IllegalArgumentException("El residuo no corresponde al tipo de este acopio");
         }
-        ResiduoGenerado residuo = new ResiduoGenerado(ordenId, declaracionOrigenId, tipo, cantidad, fechaGeneracion);
+        ResiduoGenerado residuo =
+                new ResiduoGenerado(ordenId, declaracionOrigenId, tipo, cantidad, fechaGeneracion);
         residuos.add(residuo);
         return residuo;
     }
 
     public void configurarCapacidad(CapacidadDeAcopio nuevaCapacidad) {
-        if (nuevaCapacidad == null) throw new IllegalArgumentException("La capacidad es obligatoria");
+        if (nuevaCapacidad == null) {
+            throw new IllegalArgumentException("La capacidad es obligatoria");
+        }
         if (!nuevaCapacidad.getUnidad().equals(capacidad.getUnidad())) {
-            throw new IllegalArgumentException("No se puede cambiar la unidad de un acopio existente");
+            throw new IllegalArgumentException(
+                    "No se puede cambiar la unidad de un acopio existente");
         }
         if (nuevaCapacidad.getValorMaximo().compareTo(cantidadAcopiada()) < 0) {
-            throw new IllegalArgumentException("La nueva capacidad es menor que la cantidad almacenada");
+            throw new IllegalArgumentException(
+                    "La nueva capacidad es menor que la cantidad almacenada");
         }
         this.capacidad = nuevaCapacidad;
     }
@@ -84,12 +94,20 @@ public class AcopioTemporal {
         if (residuosIds == null || residuosIds.isEmpty()) {
             throw new IllegalArgumentException("Debe indicar al menos un residuo");
         }
-        List<ResiduoGenerado> seleccionados = residuosIds.stream().distinct().map(this::buscarResiduo).toList();
-        boolean todosYaEntregados = seleccionados.stream().allMatch(residuo ->
-                residuo.getEstado() == EstadoDelResiduo.ENTREGADO && entregaId.equals(residuo.getEntregaId()));
-        if (todosYaEntregados) return;
-        boolean algunoNoDisponible = seleccionados.stream().anyMatch(residuo ->
-                residuo.getEstado() != EstadoDelResiduo.ALMACENADO);
+        List<ResiduoGenerado> seleccionados =
+                residuosIds.stream().distinct().map(this::buscarResiduo).toList();
+        boolean todosYaEntregados =
+                seleccionados.stream()
+                        .allMatch(
+                                residuo ->
+                                        residuo.getEstado() == EstadoDelResiduo.ENTREGADO
+                                                && entregaId.equals(residuo.getEntregaId()));
+        if (todosYaEntregados) {
+            return;
+        }
+        boolean algunoNoDisponible =
+                seleccionados.stream()
+                        .anyMatch(residuo -> residuo.getEstado() != EstadoDelResiduo.ALMACENADO);
         if (algunoNoDisponible) {
             throw new IllegalStateException("Todos los residuos deben estar ALMACENADOS");
         }
@@ -112,11 +130,24 @@ public class AcopioTemporal {
     }
 
     public ResiduoGenerado buscarResiduo(Long residuoId) {
-        return residuos.stream().filter(residuo -> residuo.getId().equals(residuoId)).findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("No se encontro el residuo con ID: " + residuoId));
+        return residuos.stream()
+                .filter(residuo -> residuo.getId().equals(residuoId))
+                .findFirst()
+                .orElseThrow(
+                        () ->
+                                new IllegalArgumentException(
+                                        "No se encontro el residuo con ID: " + residuoId));
     }
 
-    public TipoDeResiduo getTipoDeResiduo() { return tipoDeResiduo; }
-    public CapacidadDeAcopio getCapacidad() { return capacidad; }
-    public List<ResiduoGenerado> getResiduos() { return Collections.unmodifiableList(residuos); }
+    public TipoDeResiduo getTipoDeResiduo() {
+        return tipoDeResiduo;
+    }
+
+    public CapacidadDeAcopio getCapacidad() {
+        return capacidad;
+    }
+
+    public List<ResiduoGenerado> getResiduos() {
+        return Collections.unmodifiableList(residuos);
+    }
 }

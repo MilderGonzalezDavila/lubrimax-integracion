@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
 import org.lubrimax.msvc_ejecucion_mantenimiento.models.CantidadDeProducto;
 import org.lubrimax.msvc_ejecucion_mantenimiento.models.Dinero;
 import org.lubrimax.msvc_ejecucion_mantenimiento.models.PrecioAplicado;
@@ -24,22 +25,33 @@ public class ConsumoReal {
     private Long productoId;
 
     @Embedded
-    @AttributeOverride(name = "valor", column = @Column(name = "cantidad", nullable = false, precision = 12, scale = 3))
-    @AttributeOverride(name = "unidad", column = @Column(name = "unidad", nullable = false, length = 20))
+    @AttributeOverride(
+            name = "valor",
+            column = @Column(name = "cantidad", nullable = false, precision = 12, scale = 3))
+    @AttributeOverride(
+            name = "unidad",
+            column = @Column(name = "unidad", nullable = false, length = 20))
     private CantidadDeProducto cantidad;
 
     @Embedded
-    @AttributeOverride(name = "monto", column = @Column(name = "precio_unitario", nullable = false, precision = 12, scale = 2))
-    @AttributeOverride(name = "moneda", column = @Column(name = "moneda", nullable = false, length = 3))
-    @AttributeOverride(name = "momento", column = @Column(name = "momento_precio", nullable = false))
+    @AttributeOverride(
+            name = "monto",
+            column = @Column(name = "precio_unitario", nullable = false, precision = 12, scale = 2))
+    @AttributeOverride(
+            name = "moneda",
+            column = @Column(name = "moneda", nullable = false, length = 3))
+    @AttributeOverride(
+            name = "momento",
+            column = @Column(name = "momento_precio", nullable = false))
     private PrecioAplicado precioAplicado;
 
-    protected ConsumoReal() {
-    }
+    protected ConsumoReal() {}
 
-    public ConsumoReal(Long productoId, CantidadDeProducto cantidad, PrecioAplicado precioAplicado) {
+    public ConsumoReal(
+            Long productoId, CantidadDeProducto cantidad, PrecioAplicado precioAplicado) {
         if (productoId == null || cantidad == null || precioAplicado == null) {
-            throw new IllegalArgumentException("El producto, la cantidad y el precio son obligatorios");
+            throw new IllegalArgumentException(
+                    "El producto, la cantidad y el precio son obligatorios");
         }
         this.productoId = productoId;
         this.cantidad = cantidad;
@@ -50,8 +62,19 @@ public class ConsumoReal {
         return precioAplicado.comoDinero().multiplicar(cantidad.getValor());
     }
 
-    public Long getId() { return id; }
-    public Long getProductoId() { return productoId; }
-    public CantidadDeProducto getCantidad() { return cantidad; }
-    public PrecioAplicado getPrecioAplicado() { return precioAplicado; }
+    public Long getId() {
+        return id;
+    }
+
+    public Long getProductoId() {
+        return productoId;
+    }
+
+    public CantidadDeProducto getCantidad() {
+        return cantidad;
+    }
+
+    public PrecioAplicado getPrecioAplicado() {
+        return precioAplicado;
+    }
 }

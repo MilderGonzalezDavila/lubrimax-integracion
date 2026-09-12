@@ -12,8 +12,13 @@ import java.time.LocalDateTime;
 public interface AcopioTemporalClienteRest {
 
     @PostMapping("/api/acopios/{tipo}/residuos")
-    void registrarResiduo(@PathVariable("tipo") String tipo, @RequestBody RegistrarResiduoRequest request);
+    void registrarResiduo(
+            @PathVariable("tipo") String tipo, @RequestBody RegistrarResiduoRequest request);
 
-    record RegistrarResiduoRequest(Long ordenId, Long declaracionOrigenId, BigDecimal cantidad,
-                                    String unidad, LocalDateTime fechaGeneracion) {}
+    record RegistrarResiduoRequest(
+            Long ordenId,
+            Long declaracionOrigenId,
+            BigDecimal cantidad,
+            String unidad,
+            LocalDateTime fechaGeneracion) {}
 }

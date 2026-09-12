@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
+
 import org.lubrimax.msvc_operador_autorizado.models.AutorizacionDelOperador;
 import org.lubrimax.msvc_operador_autorizado.models.Ruc;
 import org.lubrimax.msvc_operador_autorizado.models.Telefono;
@@ -21,25 +22,20 @@ public class OperadorAutorizado {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Version
-    private int version;
+    @Version private int version;
 
-    @Embedded
-    private Ruc ruc;
+    @Embedded private Ruc ruc;
 
     private String razonSocial;
 
-    @Embedded
-    private Telefono telefono;
+    @Embedded private Telefono telefono;
 
-    @Embedded
-    private AutorizacionDelOperador autorizacion;
+    @Embedded private AutorizacionDelOperador autorizacion;
 
-    protected OperadorAutorizado() {
-    }
+    protected OperadorAutorizado() {}
 
-    public OperadorAutorizado(Ruc ruc, String razonSocial, Telefono telefono,
-                              AutorizacionDelOperador autorizacion) {
+    public OperadorAutorizado(
+            Ruc ruc, String razonSocial, Telefono telefono, AutorizacionDelOperador autorizacion) {
         validarDatos(ruc, razonSocial, telefono);
         if (autorizacion == null) {
             throw new IllegalArgumentException("La autorizacion del operador es obligatoria");
@@ -68,16 +64,34 @@ public class OperadorAutorizado {
     }
 
     private void validarDatos(Ruc ruc, String razonSocial, Telefono telefono) {
-        if (ruc == null) throw new IllegalArgumentException("El RUC es obligatorio");
+        if (ruc == null) {
+            throw new IllegalArgumentException("El RUC es obligatorio");
+        }
         if (razonSocial == null || razonSocial.isBlank()) {
             throw new IllegalArgumentException("La razon social es obligatoria");
         }
-        if (telefono == null) throw new IllegalArgumentException("El telefono es obligatorio");
+        if (telefono == null) {
+            throw new IllegalArgumentException("El telefono es obligatorio");
+        }
     }
 
-    public Long getId() { return id; }
-    public Ruc getRuc() { return ruc; }
-    public String getRazonSocial() { return razonSocial; }
-    public Telefono getTelefono() { return telefono; }
-    public AutorizacionDelOperador getAutorizacion() { return autorizacion; }
+    public Long getId() {
+        return id;
+    }
+
+    public Ruc getRuc() {
+        return ruc;
+    }
+
+    public String getRazonSocial() {
+        return razonSocial;
+    }
+
+    public Telefono getTelefono() {
+        return telefono;
+    }
+
+    public AutorizacionDelOperador getAutorizacion() {
+        return autorizacion;
+    }
 }

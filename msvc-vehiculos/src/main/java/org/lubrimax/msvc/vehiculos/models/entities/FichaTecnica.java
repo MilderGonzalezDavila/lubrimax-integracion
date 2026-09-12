@@ -34,8 +34,7 @@ public class FichaTecnica {
     @Enumerated(EnumType.STRING)
     private TipoCombustible tipoCombustible;
 
-    public FichaTecnica() {
-    }
+    public FichaTecnica() {}
 
     public String getMarca() {
         return marca;

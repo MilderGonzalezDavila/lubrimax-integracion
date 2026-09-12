@@ -1,15 +1,19 @@
 package org.lubrimax.msvc.abastecimiento.controllers;
 
-
 import org.lubrimax.msvc.abastecimiento.models.CondicionDelInsumo;
 import org.lubrimax.msvc.abastecimiento.models.EstadoDeRecepcion;
 import org.lubrimax.msvc.abastecimiento.models.ResultadoDeVerificacion;
-
 import org.lubrimax.msvc.abastecimiento.models.entity.RecepcionDeMercaderia;
 import org.lubrimax.msvc.abastecimiento.services.AbastecimientoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -21,7 +25,6 @@ public class AbastecimientoController {
 
     private final AbastecimientoService abastecimientoService;
 
-    // Inyección por constructor estándar
     public AbastecimientoController(AbastecimientoService abastecimientoService) {
         this.abastecimientoService = abastecimientoService;
     }
@@ -41,15 +44,20 @@ public class AbastecimientoController {
     }
 
     @PostMapping("/iniciar")
-    public ResponseEntity<?> iniciarRecepcion(@RequestParam Long proveedorId, @RequestParam String documento) {
+    public ResponseEntity<?> iniciarRecepcion(
+            @RequestParam Long proveedorId, @RequestParam String documento) {
         try {
-            RecepcionDeMercaderia recepcion = abastecimientoService.iniciarRecepcion(proveedorId, documento);
+            RecepcionDeMercaderia recepcion =
+                    abastecimientoService.iniciarRecepcion(proveedorId, documento);
             return ResponseEntity.status(HttpStatus.CREATED).body(recepcion);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         } catch (feign.FeignException e) {
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
-                    .body(Map.of("error", "No se pudo consultar el proveedor para iniciar la recepción"));
+                    .body(
+                            Map.of(
+                                    "error",
+                                    "No se pudo consultar el proveedor para iniciar la recepcion"));
         }
     }
 
@@ -61,18 +69,16 @@ public class AbastecimientoController {
             @RequestParam BigDecimal costo,
             @RequestParam String lote,
             @RequestParam ResultadoDeVerificacion verificacion,
-            @RequestParam Long productoId
-    ) {
+            @RequestParam Long productoId) {
         Optional<RecepcionDeMercaderia> recepcionOpt = abastecimientoService.buscarPorId(id);
         if (recepcionOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", "No se encontró la recepción con ID: " + id));
+                    .body(Map.of("error", "No se encontro la recepcion con ID: " + id));
         }
-
         try {
-            RecepcionDeMercaderia recepcion = abastecimientoService.agregarLineaVerificada(
-                    id, presentacion, cantidad, costo, lote, verificacion, productoId
-            );
+            RecepcionDeMercaderia recepcion =
+                    abastecimientoService.agregarLineaVerificada(
+                            id, presentacion, cantidad, costo, lote, verificacion, productoId);
             return ResponseEntity.ok(recepcion);
         } catch (IllegalArgumentException | IllegalStateException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
@@ -87,11 +93,11 @@ public class AbastecimientoController {
         Optional<RecepcionDeMercaderia> recepcionOpt = abastecimientoService.buscarPorId(id);
         if (recepcionOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", "No se encontró la recepción con ID: " + id));
+                    .body(Map.of("error", "No se encontro la recepcion con ID: " + id));
         }
-
         try {
-            RecepcionDeMercaderia recepcion = abastecimientoService.registrarObservacionDeLinea(id, lineaId, condicion);
+            RecepcionDeMercaderia recepcion =
+                    abastecimientoService.registrarObservacionDeLinea(id, lineaId, condicion);
             return ResponseEntity.ok(recepcion);
         } catch (IllegalArgumentException | IllegalStateException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
@@ -103,9 +109,8 @@ public class AbastecimientoController {
         Optional<RecepcionDeMercaderia> recepcionOpt = abastecimientoService.buscarPorId(id);
         if (recepcionOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", "No se encontró la recepción con ID: " + id));
+                    .body(Map.of("error", "No se encontro la recepcion con ID: " + id));
         }
-
         try {
             RecepcionDeMercaderia recepcion = abastecimientoService.darConformidad(id);
             return ResponseEntity.ok(recepcion);
@@ -119,13 +124,11 @@ public class AbastecimientoController {
         Optional<RecepcionDeMercaderia> recepcionOpt = abastecimientoService.buscarPorId(id);
         if (recepcionOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", "No se encontró la recepción con ID: " + id));
+                    .body(Map.of("error", "No se encontro la recepcion con ID: " + id));
         }
-
         if (recepcionOpt.get().getEstado() == EstadoDeRecepcion.CERRADO) {
             return ResponseEntity.ok(recepcionOpt.get());
         }
-
         try {
             RecepcionDeMercaderia recepcion = abastecimientoService.cerrarRecepcion(id);
             return ResponseEntity.ok(recepcion);
@@ -133,7 +136,10 @@ public class AbastecimientoController {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         } catch (feign.FeignException e) {
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
-                    .body(Map.of("error", "Fallo la sincronización de stock por red: " + e.getMessage()));
+                    .body(
+                            Map.of(
+                                    "error",
+                                    "Fallo la sincronizacion de stock por red: " + e.getMessage()));
         }
     }
 

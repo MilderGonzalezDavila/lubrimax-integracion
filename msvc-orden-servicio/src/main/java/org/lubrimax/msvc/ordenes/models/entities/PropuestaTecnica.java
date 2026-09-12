@@ -33,26 +33,50 @@ public class PropuestaTecnica {
     @Valid
     @NotEmpty(message = "debe contener al menos un concepto")
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "conceptos_propuestos", joinColumns = @JoinColumn(name = "propuesta_id"))
+    @CollectionTable(
+            name = "conceptos_propuestos",
+            joinColumns = @JoinColumn(name = "propuesta_id"))
     private List<ConceptoPropuesto> conceptos = new ArrayList<>();
 
-    public PropuestaTecnica() {
-    }
+    public PropuestaTecnica() {}
 
     public void presentar() {
         if (estado != EstadoPropuesta.BORRADOR && estado != EstadoPropuesta.MODIFICADA) {
-            throw new IllegalArgumentException("Solo una propuesta en borrador o modificada puede presentarse");
+            throw new IllegalArgumentException(
+                    "Solo una propuesta en borrador o modificada puede presentarse");
         }
         estado = EstadoPropuesta.PRESENTADA;
     }
 
-    public void aceptar() { estado = EstadoPropuesta.ACEPTADA; }
-    public void rechazar() { estado = EstadoPropuesta.RECHAZADA; }
+    public void aceptar() {
+        estado = EstadoPropuesta.ACEPTADA;
+    }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public EstadoPropuesta getEstado() { return estado; }
-    public void setEstado(EstadoPropuesta estado) { this.estado = estado; }
-    public List<ConceptoPropuesto> getConceptos() { return conceptos; }
-    public void setConceptos(List<ConceptoPropuesto> conceptos) { this.conceptos = conceptos; }
+    public void rechazar() {
+        estado = EstadoPropuesta.RECHAZADA;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public EstadoPropuesta getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoPropuesta estado) {
+        this.estado = estado;
+    }
+
+    public List<ConceptoPropuesto> getConceptos() {
+        return conceptos;
+    }
+
+    public void setConceptos(List<ConceptoPropuesto> conceptos) {
+        this.conceptos = conceptos;
+    }
 }

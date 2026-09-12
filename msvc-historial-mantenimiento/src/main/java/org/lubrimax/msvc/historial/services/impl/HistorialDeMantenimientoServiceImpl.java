@@ -18,9 +18,7 @@ public class HistorialDeMantenimientoServiceImpl implements HistorialDeMantenimi
     private final VehiculoClientRest vehiculoClient;
 
     public HistorialDeMantenimientoServiceImpl(
-            HistorialDeMantenimientoRepository repository,
-            VehiculoClientRest vehiculoClient
-    ) {
+            HistorialDeMantenimientoRepository repository, VehiculoClientRest vehiculoClient) {
         this.repository = repository;
         this.vehiculoClient = vehiculoClient;
     }
@@ -39,12 +37,16 @@ public class HistorialDeMantenimientoServiceImpl implements HistorialDeMantenimi
 
     @Override
     @Transactional
-    public HistorialDeMantenimiento registrarMantenimiento(Long vehiculoId, RegistroMantenimiento registro) {
-        HistorialDeMantenimiento historial = repository.findById(vehiculoId)
-                .orElseGet(() -> {
-                    vehiculoClient.detalle(vehiculoId);
-                    return new HistorialDeMantenimiento(vehiculoId);
-                });
+    public HistorialDeMantenimiento registrarMantenimiento(
+            Long vehiculoId, RegistroMantenimiento registro) {
+        HistorialDeMantenimiento historial =
+                repository
+                        .findById(vehiculoId)
+                        .orElseGet(
+                                () -> {
+                                    vehiculoClient.detalle(vehiculoId);
+                                    return new HistorialDeMantenimiento(vehiculoId);
+                                });
 
         historial.agregarRegistro(registro);
         return repository.save(historial);

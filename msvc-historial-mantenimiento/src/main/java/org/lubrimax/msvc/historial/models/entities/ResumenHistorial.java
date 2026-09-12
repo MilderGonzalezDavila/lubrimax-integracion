@@ -8,17 +8,20 @@ public record ResumenHistorial(
         LocalDate ultimaFecha,
         Long ultimoKilometraje,
         List<ProductoUtilizadoResumen> ultimosProductos,
-        ProximoServicio proximoServicio
-) {
+        ProximoServicio proximoServicio) {
     public static ResumenHistorial desde(HistorialDeMantenimiento historial) {
-        return historial.ultimoRegistro()
-                .map(registro -> new ResumenHistorial(
-                        historial.getVehiculoId(),
-                        registro.getFechaAtencion(),
-                        registro.getKilometraje(),
-                        registro.getProductosUtilizados(),
-                        registro.getProximoServicio()
-                ))
-                .orElse(new ResumenHistorial(historial.getVehiculoId(), null, null, List.of(), null));
+        return historial
+                .ultimoRegistro()
+                .map(
+                        registro ->
+                                new ResumenHistorial(
+                                        historial.getVehiculoId(),
+                                        registro.getFechaAtencion(),
+                                        registro.getKilometraje(),
+                                        registro.getProductosUtilizados(),
+                                        registro.getProximoServicio()))
+                .orElse(
+                        new ResumenHistorial(
+                                historial.getVehiculoId(), null, null, List.of(), null));
     }
 }

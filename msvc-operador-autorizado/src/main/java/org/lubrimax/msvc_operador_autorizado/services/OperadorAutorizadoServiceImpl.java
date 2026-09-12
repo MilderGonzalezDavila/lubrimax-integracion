@@ -22,8 +22,8 @@ public class OperadorAutorizadoServiceImpl implements OperadorAutorizadoService 
 
     @Override
     @Transactional
-    public OperadorAutorizado registrar(Ruc ruc, String razonSocial, Telefono telefono,
-                                        AutorizacionDelOperador autorizacion) {
+    public OperadorAutorizado registrar(
+            Ruc ruc, String razonSocial, Telefono telefono, AutorizacionDelOperador autorizacion) {
         validarDuplicados(null, ruc.getNumero(), autorizacion.getRegistroEors());
         return repository.save(new OperadorAutorizado(ruc, razonSocial, telefono, autorizacion));
     }
@@ -31,8 +31,12 @@ public class OperadorAutorizadoServiceImpl implements OperadorAutorizadoService 
     @Override
     @Transactional(readOnly = true)
     public OperadorAutorizado buscarPorId(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("No se encontro el operador con ID: " + id));
+        return repository
+                .findById(id)
+                .orElseThrow(
+                        () ->
+                                new IllegalArgumentException(
+                                        "No se encontro el operador con ID: " + id));
     }
 
     @Override
@@ -51,7 +55,8 @@ public class OperadorAutorizadoServiceImpl implements OperadorAutorizadoService 
 
     @Override
     @Transactional
-    public OperadorAutorizado actualizarAutorizacion(Long id, AutorizacionDelOperador autorizacion) {
+    public OperadorAutorizado actualizarAutorizacion(
+            Long id, AutorizacionDelOperador autorizacion) {
         OperadorAutorizado operador = buscarPorId(id);
         validarDuplicados(id, operador.getRuc().getNumero(), autorizacion.getRegistroEors());
         operador.actualizarAutorizacion(autorizacion);
@@ -68,19 +73,28 @@ public class OperadorAutorizadoServiceImpl implements OperadorAutorizadoService 
     @Transactional(readOnly = true)
     public List<OperadorAutorizado> listarVigentes(LocalDate fecha) {
         return repository
-                .findByAutorizacionPeriodoDeVigenciaDesdeLessThanEqualAndAutorizacionPeriodoDeVigenciaHastaGreaterThanEqual(fecha, fecha);
+                .findByAutorizacionPeriodoDeVigenciaDesdeLessThanEqualAndAutorizacionPeriodoDeVigenciaHastaGreaterThanEqual(
+                        fecha, fecha);
     }
 
     private void validarDuplicados(Long operadorId, String ruc, String registroEors) {
-        repository.findByRucNumero(ruc).ifPresent(existente -> {
-            if (!existente.getId().equals(operadorId)) {
-                throw new IllegalArgumentException("Ya existe un operador con el RUC indicado");
-            }
-        });
-        repository.findByAutorizacionRegistroEors(registroEors).ifPresent(existente -> {
-            if (!existente.getId().equals(operadorId)) {
-                throw new IllegalArgumentException("Ya existe un operador con el registro EORS indicado");
-            }
-        });
+        repository
+                .findByRucNumero(ruc)
+                .ifPresent(
+                        existente -> {
+                            if (!existente.getId().equals(operadorId)) {
+                                throw new IllegalArgumentException(
+                                        "Ya existe un operador con el RUC indicado");
+                            }
+                        });
+        repository
+                .findByAutorizacionRegistroEors(registroEors)
+                .ifPresent(
+                        existente -> {
+                            if (!existente.getId().equals(operadorId)) {
+                                throw new IllegalArgumentException(
+                                        "Ya existe un operador con el registro EORS indicado");
+                            }
+                        });
     }
 }

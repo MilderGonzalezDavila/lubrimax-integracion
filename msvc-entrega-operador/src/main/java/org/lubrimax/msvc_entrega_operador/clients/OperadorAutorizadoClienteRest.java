@@ -11,8 +11,15 @@ import java.time.LocalDate;
 public interface OperadorAutorizadoClienteRest {
 
     @GetMapping("/api/operadores/{id}/vigencia")
-    VigenciaResponse consultarVigencia(@PathVariable("id") Long id, @RequestParam("fecha") LocalDate fecha);
+    VigenciaResponse consultarVigencia(
+            @PathVariable("id") Long id, @RequestParam("fecha") LocalDate fecha);
 
-    record VigenciaResponse(Long operadorId, String ruc, String razonSocial, String registroEors,
-                            LocalDate desde, LocalDate hasta, boolean vigente) {}
+    record VigenciaResponse(
+            Long operadorId,
+            String ruc,
+            String razonSocial,
+            String registroEors,
+            LocalDate desde,
+            LocalDate hasta,
+            boolean vigente) {}
 }

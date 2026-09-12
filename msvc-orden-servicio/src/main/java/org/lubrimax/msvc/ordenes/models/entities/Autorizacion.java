@@ -48,26 +48,62 @@ public class Autorizacion {
 
     @Valid
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "conceptos_autorizados", joinColumns = @JoinColumn(name = "autorizacion_id"))
+    @CollectionTable(
+            name = "conceptos_autorizados",
+            joinColumns = @JoinColumn(name = "autorizacion_id"))
     private List<ConceptoAutorizado> conceptos = new ArrayList<>();
 
-    public Autorizacion() {
-    }
+    public Autorizacion() {}
 
     public void registrarMomento() {
         momento = LocalDateTime.now();
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public Long getPropuestaId() { return propuestaId; }
-    public void setPropuestaId(Long propuestaId) { this.propuestaId = propuestaId; }
-    public AlcanceAutorizacion getAlcance() { return alcance; }
-    public void setAlcance(AlcanceAutorizacion alcance) { this.alcance = alcance; }
-    public MedioAutorizacion getMedio() { return medio; }
-    public void setMedio(MedioAutorizacion medio) { this.medio = medio; }
-    public LocalDateTime getMomento() { return momento; }
-    public void setMomento(LocalDateTime momento) { this.momento = momento; }
-    public List<ConceptoAutorizado> getConceptos() { return conceptos; }
-    public void setConceptos(List<ConceptoAutorizado> conceptos) { this.conceptos = conceptos; }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getPropuestaId() {
+        return propuestaId;
+    }
+
+    public void setPropuestaId(Long propuestaId) {
+        this.propuestaId = propuestaId;
+    }
+
+    public AlcanceAutorizacion getAlcance() {
+        return alcance;
+    }
+
+    public void setAlcance(AlcanceAutorizacion alcance) {
+        this.alcance = alcance;
+    }
+
+    public MedioAutorizacion getMedio() {
+        return medio;
+    }
+
+    public void setMedio(MedioAutorizacion medio) {
+        this.medio = medio;
+    }
+
+    public LocalDateTime getMomento() {
+        return momento;
+    }
+
+    public void setMomento(LocalDateTime momento) {
+        this.momento = momento;
+    }
+
+    public List<ConceptoAutorizado> getConceptos() {
+        return conceptos;
+    }
+
+    public void setConceptos(List<ConceptoAutorizado> conceptos) {
+        this.conceptos = conceptos;
+    }
 }

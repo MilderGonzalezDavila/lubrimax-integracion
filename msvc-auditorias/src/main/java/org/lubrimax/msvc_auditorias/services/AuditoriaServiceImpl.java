@@ -12,8 +12,7 @@ import java.util.Optional;
 @Service
 public class AuditoriaServiceImpl implements AuditoriaService {
 
-    @Autowired
-    private AuditoriaRepository repository;
+    @Autowired private AuditoriaRepository repository;
 
     @Override
     @Transactional
@@ -30,8 +29,10 @@ public class AuditoriaServiceImpl implements AuditoriaService {
     @Override
     @Transactional
     public void registrarHallazgoExterno(Long auditoriaId, HallazgoDeAuditoria hallazgo) {
-        AuditoriaDeControlInterno auditoria = repository.findById(auditoriaId)
-                .orElseThrow(() -> new RuntimeException("Auditoría no encontrada"));
+        AuditoriaDeControlInterno auditoria =
+                repository
+                        .findById(auditoriaId)
+                        .orElseThrow(() -> new RuntimeException("Auditoría no encontrada"));
 
         // Validamos la regla interna de la entidad antes de integrarla al agregado[cite: 1]
         if (!hallazgo.validarJustificacion()) {
@@ -47,8 +48,10 @@ public class AuditoriaServiceImpl implements AuditoriaService {
     @Override
     @Transactional
     public AuditoriaDeControlInterno cerrarAuditoria(Long auditoriaId) {
-        AuditoriaDeControlInterno auditoria = repository.findById(auditoriaId)
-                .orElseThrow(() -> new RuntimeException("Auditoría no encontrada"));
+        AuditoriaDeControlInterno auditoria =
+                repository
+                        .findById(auditoriaId)
+                        .orElseThrow(() -> new RuntimeException("Auditoría no encontrada"));
 
         auditoria.cerrar();
         return repository.save(auditoria);

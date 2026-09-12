@@ -10,8 +10,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 public class MsvcInventarioApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(MsvcInventarioApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(MsvcInventarioApplication.class, args);
+    }
 }

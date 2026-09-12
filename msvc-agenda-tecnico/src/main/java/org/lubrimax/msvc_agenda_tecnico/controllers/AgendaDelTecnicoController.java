@@ -2,6 +2,7 @@ package org.lubrimax.msvc_agenda_tecnico.controllers;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+
 import org.lubrimax.msvc_agenda_tecnico.models.PeriodoDeTrabajo;
 import org.lubrimax.msvc_agenda_tecnico.models.entity.AgendaDelTecnico;
 import org.lubrimax.msvc_agenda_tecnico.models.entity.AsignacionDeTrabajo;
@@ -36,18 +37,23 @@ public class AgendaDelTecnicoController {
     }
 
     @PostMapping("/{usuarioId}/asignaciones")
-    public ResponseEntity<AsignacionDeTrabajo> asignar(@PathVariable Long usuarioId,
-            @Valid @RequestBody AsignarTrabajoRequest request) {
-        AsignacionDeTrabajo asignacion = service.asignar(usuarioId, request.ordenId(),
-                new PeriodoDeTrabajo(request.inicio(), request.fin()));
+    public ResponseEntity<AsignacionDeTrabajo> asignar(
+            @PathVariable Long usuarioId, @Valid @RequestBody AsignarTrabajoRequest request) {
+        AsignacionDeTrabajo asignacion =
+                service.asignar(
+                        usuarioId,
+                        request.ordenId(),
+                        new PeriodoDeTrabajo(request.inicio(), request.fin()));
         return ResponseEntity.status(HttpStatus.CREATED).body(asignacion);
     }
 
     @GetMapping("/{usuarioId}/disponibilidad")
-    public DisponibilidadResponse consultarDisponibilidad(@PathVariable Long usuarioId,
-            @RequestParam LocalDateTime inicio, @RequestParam LocalDateTime fin) {
-        return new DisponibilidadResponse(service.consultarDisponibilidad(usuarioId,
-                new PeriodoDeTrabajo(inicio, fin)));
+    public DisponibilidadResponse consultarDisponibilidad(
+            @PathVariable Long usuarioId,
+            @RequestParam LocalDateTime inicio,
+            @RequestParam LocalDateTime fin) {
+        return new DisponibilidadResponse(
+                service.consultarDisponibilidad(usuarioId, new PeriodoDeTrabajo(inicio, fin)));
     }
 
     @PostMapping("/{usuarioId}/asignaciones/{asignacionId}/iniciar")
@@ -71,12 +77,15 @@ public class AgendaDelTecnicoController {
     }
 
     @GetMapping("/{usuarioId}/asignaciones/orden/{ordenId}/valida")
-    public ValidacionAsignacionResponse validarAsignacion(@PathVariable Long usuarioId, @PathVariable Long ordenId) {
+    public ValidacionAsignacionResponse validarAsignacion(
+            @PathVariable Long usuarioId, @PathVariable Long ordenId) {
         return new ValidacionAsignacionResponse(service.tieneAsignacionValida(usuarioId, ordenId));
     }
 
-    public record AsignarTrabajoRequest(@NotNull Long ordenId, @NotNull LocalDateTime inicio,
-                                         @NotNull LocalDateTime fin) {}
+    public record AsignarTrabajoRequest(
+            @NotNull Long ordenId, @NotNull LocalDateTime inicio, @NotNull LocalDateTime fin) {}
+
     public record DisponibilidadResponse(boolean disponible) {}
+
     public record ValidacionAsignacionResponse(boolean valida) {}
 }

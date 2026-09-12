@@ -18,7 +18,8 @@ public class AgendaDelTecnicoServiceImpl implements AgendaDelTecnicoService {
     private final AgendaDelTecnicoRepository repository;
     private final UsuarioClienteRest usuarioCliente;
 
-    public AgendaDelTecnicoServiceImpl(AgendaDelTecnicoRepository repository, UsuarioClienteRest usuarioCliente) {
+    public AgendaDelTecnicoServiceImpl(
+            AgendaDelTecnicoRepository repository, UsuarioClienteRest usuarioCliente) {
         this.repository = repository;
         this.usuarioCliente = usuarioCliente;
     }
@@ -26,15 +27,20 @@ public class AgendaDelTecnicoServiceImpl implements AgendaDelTecnicoService {
     @Override
     @Transactional(readOnly = true)
     public AgendaDelTecnico obtener(Long usuarioId) {
-        return repository.findById(usuarioId)
-                .orElseThrow(() -> new IllegalArgumentException("No existe una agenda para el tecnico: " + usuarioId));
+        return repository
+                .findById(usuarioId)
+                .orElseThrow(
+                        () ->
+                                new IllegalArgumentException(
+                                        "No existe una agenda para el tecnico: " + usuarioId));
     }
 
     @Override
     @Transactional
     public AsignacionDeTrabajo asignar(Long usuarioId, Long ordenId, PeriodoDeTrabajo periodo) {
         boolean tecnicoActivo = usuarioCliente.buscarUsuario(usuarioId).esTecnicoActivo();
-        AgendaDelTecnico agenda = repository.findById(usuarioId).orElseGet(() -> new AgendaDelTecnico(usuarioId));
+        AgendaDelTecnico agenda =
+                repository.findById(usuarioId).orElseGet(() -> new AgendaDelTecnico(usuarioId));
         AsignacionDeTrabajo asignacion = agenda.asignar(ordenId, periodo, tecnicoActivo);
         repository.save(agenda);
         return asignacion;
@@ -43,7 +49,10 @@ public class AgendaDelTecnicoServiceImpl implements AgendaDelTecnicoService {
     @Override
     @Transactional(readOnly = true)
     public boolean consultarDisponibilidad(Long usuarioId, PeriodoDeTrabajo periodo) {
-        return repository.findById(usuarioId).map(agenda -> agenda.estaDisponible(periodo)).orElse(true);
+        return repository
+                .findById(usuarioId)
+                .map(agenda -> agenda.estaDisponible(periodo))
+                .orElse(true);
     }
 
     @Override
@@ -73,14 +82,20 @@ public class AgendaDelTecnicoServiceImpl implements AgendaDelTecnicoService {
     public List<AsignacionDeTrabajo> listarPorFecha(LocalDate fecha) {
         return StreamSupport.stream(repository.findAll().spliterator(), false)
                 .flatMap(agenda -> agenda.getAsignaciones().stream())
-                .filter(asignacion -> !fecha.isBefore(asignacion.getPeriodo().getInicio().toLocalDate())
-                        && !fecha.isAfter(asignacion.getPeriodo().getFin().toLocalDate()))
+                .filter(
+                        asignacion ->
+                                !fecha.isBefore(asignacion.getPeriodo().getInicio().toLocalDate())
+                                        && !fecha.isAfter(
+                                                asignacion.getPeriodo().getFin().toLocalDate()))
                 .toList();
     }
 
     @Override
     @Transactional(readOnly = true)
     public boolean tieneAsignacionValida(Long usuarioId, Long ordenId) {
-        return repository.findById(usuarioId).map(agenda -> agenda.tieneAsignacionValida(ordenId)).orElse(false);
+        return repository
+                .findById(usuarioId)
+                .map(agenda -> agenda.tieneAsignacionValida(ordenId))
+                .orElse(false);
     }
 }

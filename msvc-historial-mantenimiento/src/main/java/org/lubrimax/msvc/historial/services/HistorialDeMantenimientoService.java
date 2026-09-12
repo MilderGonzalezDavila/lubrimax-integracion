@@ -12,5 +12,6 @@ public interface HistorialDeMantenimientoService {
 
     Optional<HistorialDeMantenimiento> porVehiculoId(Long vehiculoId);
 
-    HistorialDeMantenimiento registrarMantenimiento(Long vehiculoId, RegistroMantenimiento registro);
+    HistorialDeMantenimiento registrarMantenimiento(
+            Long vehiculoId, RegistroMantenimiento registro);
 }

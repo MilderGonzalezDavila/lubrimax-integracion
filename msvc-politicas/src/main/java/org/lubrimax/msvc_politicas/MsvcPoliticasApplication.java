@@ -8,8 +8,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients
 public class MsvcPoliticasApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(MsvcPoliticasApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(MsvcPoliticasApplication.class, args);
+    }
 }

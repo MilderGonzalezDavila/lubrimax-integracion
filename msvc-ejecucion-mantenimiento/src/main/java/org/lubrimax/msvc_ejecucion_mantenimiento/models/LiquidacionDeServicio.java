@@ -20,8 +20,7 @@ public class LiquidacionDeServicio {
     @Column(name = "moneda_liquidacion", length = 3)
     private String moneda;
 
-    protected LiquidacionDeServicio() {
-    }
+    protected LiquidacionDeServicio() {}
 
     public LiquidacionDeServicio(Dinero productos, Dinero manoDeObra) {
         Dinero totalCalculado = productos.sumar(manoDeObra);
@@ -31,8 +30,19 @@ public class LiquidacionDeServicio {
         this.moneda = totalCalculado.getMoneda();
     }
 
-    public BigDecimal getSubtotalProductos() { return subtotalProductos; }
-    public BigDecimal getSubtotalManoDeObra() { return subtotalManoDeObra; }
-    public BigDecimal getTotal() { return total; }
-    public String getMoneda() { return moneda; }
+    public BigDecimal getSubtotalProductos() {
+        return subtotalProductos;
+    }
+
+    public BigDecimal getSubtotalManoDeObra() {
+        return subtotalManoDeObra;
+    }
+
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    public String getMoneda() {
+        return moneda;
+    }
 }

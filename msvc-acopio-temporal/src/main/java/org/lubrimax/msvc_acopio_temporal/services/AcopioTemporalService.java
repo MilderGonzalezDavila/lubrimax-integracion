@@ -11,10 +11,19 @@ import java.util.List;
 
 public interface AcopioTemporalService {
     AcopioTemporal crear(TipoDeResiduo tipo, CapacidadDeAcopio capacidad);
+
     AcopioTemporal obtener(TipoDeResiduo tipo);
+
     AcopioTemporal configurarCapacidad(TipoDeResiduo tipo, CapacidadDeAcopio capacidad);
-    ResiduoGenerado registrarResiduo(TipoDeResiduo tipo, Long ordenId, Long declaracionOrigenId,
-                                     CantidadDeResiduo cantidad, LocalDateTime fechaGeneracion);
+
+    ResiduoGenerado registrarResiduo(
+            TipoDeResiduo tipo,
+            Long ordenId,
+            Long declaracionOrigenId,
+            CantidadDeResiduo cantidad,
+            LocalDateTime fechaGeneracion);
+
     AcopioTemporal almacenar(TipoDeResiduo tipo, Long residuoId);
+
     AcopioTemporal confirmarEntrega(TipoDeResiduo tipo, Long entregaId, List<Long> residuosIds);
 }

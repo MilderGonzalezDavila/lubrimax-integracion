@@ -5,5 +5,4 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PoliticaDelNegocioRepository extends CrudRepository<PoliticaDelNegocio, Long> {
-}
+public interface PoliticaDelNegocioRepository extends CrudRepository<PoliticaDelNegocio, Long> {}

@@ -4,6 +4,7 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class Permiso {
+
     private String recurso;
     private String accion;
 
@@ -14,6 +15,11 @@ public class Permiso {
         this.accion = accion;
     }
 
-    public String getRecurso() { return recurso; }
-    public String getAccion() { return accion; }
+    public String getRecurso() {
+        return recurso;
+    }
+
+    public String getAccion() {
+        return accion;
+    }
 }

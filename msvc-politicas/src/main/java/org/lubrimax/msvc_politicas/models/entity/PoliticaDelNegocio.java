@@ -1,5 +1,7 @@
 package org.lubrimax.msvc_politicas.models.entity;
+
 import jakarta.persistence.*;
+
 import org.lubrimax.msvc_politicas.models.values.UmbralOperativo;
 
 import java.util.ArrayList;
@@ -19,8 +21,7 @@ public class PoliticaDelNegocio {
     private double margen;
     private String periodoVigencia;
 
-    @Embedded
-    private UmbralOperativo umbrales;
+    @Embedded private UmbralOperativo umbrales;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "politica_id")
@@ -33,7 +34,6 @@ public class PoliticaDelNegocio {
     public void cerrarVigencia() {
         this.periodoVigencia = "CERRADA";
     }
-
 
     public Long getId() {
         return id;

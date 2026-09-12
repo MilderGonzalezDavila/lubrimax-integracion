@@ -48,8 +48,7 @@ public class OrdenServicio {
     @Embedded
     private MantenimientoSolicitado mantenimientoSolicitado;
 
-    @Embedded
-    private ResumenHistorialLocal resumenHistorial;
+    @Embedded private ResumenHistorialLocal resumenHistorial;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 25)
@@ -63,8 +62,7 @@ public class OrdenServicio {
     @JoinColumn(name = "orden_id", nullable = false)
     private List<Autorizacion> autorizaciones = new ArrayList<>();
 
-    public OrdenServicio() {
-    }
+    public OrdenServicio() {}
 
     public void agregarPropuesta(PropuestaTecnica propuesta) {
         asegurarNoEmitida();
@@ -97,9 +95,10 @@ public class OrdenServicio {
         }
 
         propuesta.aceptar();
-        estado = autorizacion.getAlcance() == AlcanceAutorizacion.TOTAL
-                ? EstadoOrden.AUTORIZADA
-                : EstadoOrden.PARCIALMENTE_AUTORIZADA;
+        estado =
+                autorizacion.getAlcance() == AlcanceAutorizacion.TOTAL
+                        ? EstadoOrden.AUTORIZADA
+                        : EstadoOrden.PARCIALMENTE_AUTORIZADA;
     }
 
     public void emitir() {
@@ -113,13 +112,16 @@ public class OrdenServicio {
         return propuestas.stream()
                 .filter(propuesta -> propuesta.getId().equals(propuestaId))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("La propuesta no pertenece a la orden"));
+                .orElseThrow(
+                        () -> new IllegalArgumentException("La propuesta no pertenece a la orden"));
     }
 
-    private void validarConceptosAutorizados(PropuestaTecnica propuesta, Autorizacion autorizacion) {
+    private void validarConceptosAutorizados(
+            PropuestaTecnica propuesta, Autorizacion autorizacion) {
         if (autorizacion.getAlcance() == AlcanceAutorizacion.RECHAZO) {
             if (!autorizacion.getConceptos().isEmpty()) {
-                throw new IllegalArgumentException("Una autorización rechazada no contiene conceptos");
+                throw new IllegalArgumentException(
+                        "Una autorización rechazada no contiene conceptos");
             }
             return;
         }
@@ -128,19 +130,28 @@ public class OrdenServicio {
         }
 
         for (ConceptoAutorizado autorizado : autorizacion.getConceptos()) {
-            ConceptoPropuesto propuesto = propuesta.getConceptos().stream()
-                    .filter(concepto -> concepto.getTipo() == autorizado.getTipo()
-                            && concepto.getReferenciaId().equals(autorizado.getReferenciaId()))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("Todo concepto autorizado debe provenir de la propuesta"));
+            ConceptoPropuesto propuesto =
+                    propuesta.getConceptos().stream()
+                            .filter(
+                                    concepto ->
+                                            concepto.getTipo() == autorizado.getTipo()
+                                                    && concepto.getReferenciaId()
+                                                            .equals(autorizado.getReferenciaId()))
+                            .findFirst()
+                            .orElseThrow(
+                                    () ->
+                                            new IllegalArgumentException(
+                                                    "Todo concepto autorizado debe provenir de la propuesta"));
             if (autorizado.getCantidadAprobada() > propuesto.getCantidadEstimada()) {
-                throw new IllegalArgumentException("La cantidad autorizada no puede superar la cantidad propuesta");
+                throw new IllegalArgumentException(
+                        "La cantidad autorizada no puede superar la cantidad propuesta");
             }
         }
 
         if (autorizacion.getAlcance() == AlcanceAutorizacion.TOTAL
                 && autorizacion.getConceptos().size() != propuesta.getConceptos().size()) {
-            throw new IllegalArgumentException("La autorización total debe incluir todos los conceptos propuestos");
+            throw new IllegalArgumentException(
+                    "La autorización total debe incluir todos los conceptos propuestos");
         }
     }
 
@@ -150,22 +161,75 @@ public class OrdenServicio {
         }
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public Long getClienteId() { return clienteId; }
-    public void setClienteId(Long clienteId) { this.clienteId = clienteId; }
-    public Long getVehiculoId() { return vehiculoId; }
-    public void setVehiculoId(Long vehiculoId) { this.vehiculoId = vehiculoId; }
-    public Long getKilometrajeCapturado() { return kilometrajeCapturado; }
-    public void setKilometrajeCapturado(Long kilometrajeCapturado) { this.kilometrajeCapturado = kilometrajeCapturado; }
-    public MantenimientoSolicitado getMantenimientoSolicitado() { return mantenimientoSolicitado; }
-    public void setMantenimientoSolicitado(MantenimientoSolicitado mantenimientoSolicitado) { this.mantenimientoSolicitado = mantenimientoSolicitado; }
-    public ResumenHistorialLocal getResumenHistorial() { return resumenHistorial; }
-    public void setResumenHistorial(ResumenHistorialLocal resumenHistorial) { this.resumenHistorial = resumenHistorial; }
-    public EstadoOrden getEstado() { return estado; }
-    public void setEstado(EstadoOrden estado) { this.estado = estado; }
-    public List<PropuestaTecnica> getPropuestas() { return propuestas; }
-    public void setPropuestas(List<PropuestaTecnica> propuestas) { this.propuestas = propuestas; }
-    public List<Autorizacion> getAutorizaciones() { return autorizaciones; }
-    public void setAutorizaciones(List<Autorizacion> autorizaciones) { this.autorizaciones = autorizaciones; }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getClienteId() {
+        return clienteId;
+    }
+
+    public void setClienteId(Long clienteId) {
+        this.clienteId = clienteId;
+    }
+
+    public Long getVehiculoId() {
+        return vehiculoId;
+    }
+
+    public void setVehiculoId(Long vehiculoId) {
+        this.vehiculoId = vehiculoId;
+    }
+
+    public Long getKilometrajeCapturado() {
+        return kilometrajeCapturado;
+    }
+
+    public void setKilometrajeCapturado(Long kilometrajeCapturado) {
+        this.kilometrajeCapturado = kilometrajeCapturado;
+    }
+
+    public MantenimientoSolicitado getMantenimientoSolicitado() {
+        return mantenimientoSolicitado;
+    }
+
+    public void setMantenimientoSolicitado(MantenimientoSolicitado mantenimientoSolicitado) {
+        this.mantenimientoSolicitado = mantenimientoSolicitado;
+    }
+
+    public ResumenHistorialLocal getResumenHistorial() {
+        return resumenHistorial;
+    }
+
+    public void setResumenHistorial(ResumenHistorialLocal resumenHistorial) {
+        this.resumenHistorial = resumenHistorial;
+    }
+
+    public EstadoOrden getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoOrden estado) {
+        this.estado = estado;
+    }
+
+    public List<PropuestaTecnica> getPropuestas() {
+        return propuestas;
+    }
+
+    public void setPropuestas(List<PropuestaTecnica> propuestas) {
+        this.propuestas = propuestas;
+    }
+
+    public List<Autorizacion> getAutorizaciones() {
+        return autorizaciones;
+    }
+
+    public void setAutorizaciones(List<Autorizacion> autorizaciones) {
+        this.autorizaciones = autorizaciones;
+    }
 }

@@ -30,8 +30,7 @@ public class Proveedor {
     @Column(nullable = false)
     private boolean activo;
 
-    public Proveedor() {
-    }
+    public Proveedor() {}
 
     // Constructor práctico para registrar nuevos proveedores
     public Proveedor(String ruc, String razonSocial, String contacto) {
@@ -41,18 +40,43 @@ public class Proveedor {
         this.activo = true; // Por defecto inicia activo
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getRuc() { return ruc; }
-    public void setRuc(String ruc) { this.ruc = ruc; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getRazonSocial() { return razonSocial; }
-    public void setRazonSocial(String razonSocial) { this.razonSocial = razonSocial; }
+    public String getRuc() {
+        return ruc;
+    }
 
-    public String getContacto() { return contacto; }
-    public void setContacto(String contacto) { this.contacto = contacto; }
+    public void setRuc(String ruc) {
+        this.ruc = ruc;
+    }
 
-    public boolean isActivo() { return activo; }
-    public void setActivo(boolean activo) { this.activo = activo; }
+    public String getRazonSocial() {
+        return razonSocial;
+    }
+
+    public void setRazonSocial(String razonSocial) {
+        this.razonSocial = razonSocial;
+    }
+
+    public String getContacto() {
+        return contacto;
+    }
+
+    public void setContacto(String contacto) {
+        this.contacto = contacto;
+    }
+
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
 }

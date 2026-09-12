@@ -18,8 +18,7 @@ public class ProductoUtilizadoResumen {
     @Positive(message = "debe ser mayor que cero")
     private Integer cantidad;
 
-    public ProductoUtilizadoResumen() {
-    }
+    public ProductoUtilizadoResumen() {}
 
     public String getCodigo() {
         return codigo;

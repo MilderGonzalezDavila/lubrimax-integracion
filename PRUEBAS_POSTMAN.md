@@ -2,7 +2,7 @@
 
 > **Prerrequisitos**
 > 1. MySQL 8 corriendo en `localhost:3306` con usuario `root` / contraseña `adminMILDER1234@`.
-> 2. Los quince microservicios levantados en sus respectivos puertos.
+> 2. Los veintidós microservicios levantados en sus respectivos puertos.
 > 3. Importar las peticiones en Postman o ejecutarlas en el orden indicado (muchas dependen de IDs generados por pasos anteriores).
 
 ---
@@ -26,6 +26,13 @@
 |13 | msvc-acopio-temporal          | 8013   | msvc_lubrimax_acopio_temporal            |
 |14 | msvc-entrega-operador         | 8014   | msvc_lubrimax_entrega_operador           |
 |15 | msvc-operador-autorizado      | 8015   | msvc_lubrimax_operador_autorizado        |
+|16 | msvc-producto                 | 8016   | msvc_lubrimax_producto                    |
+|17 | msvc-servicio-mantenimiento  | 8017   | msvc_lubrimax_servicio_mantenimiento     |
+|18 | msvc-matriz-compatibilidad   | 8018   | msvc_lubrimax_matriz_compatibilidad      |
+|19 | msvc-lista-precio-base       | 8019   | msvc_lubrimax_lista_precio_base          |
+|20 | msvc-comprobante             | 8020   | msvc_lubrimax_comprobante                 |
+|21 | msvc-serie-comprobante       | 8021   | msvc_lubrimax_serie_comprobante           |
+|22 | msvc-nota-credito            | 8022   | msvc_lubrimax_nota_credito                |
 
 ---
 
@@ -40,12 +47,13 @@ Content-Type: application/json
 
 {
   "nombre": "Juan Pérez",
-  "email": "juan.perez@lubrimax.com",
-  "rol": "TECNICO"
+  "documentoIdentidad": "12345678",
+  "credencialAccesoEstado": "ACTIVO",
+  "credencial": "secreto123",
+  "rolId": 1
 }
 ```
 **Respuesta esperada:** `201 Created`.
-**Guardar:** `usuarioId = <id del response>`
 
 ---
 
@@ -59,32 +67,36 @@ GET http://localhost:8001/api/usuarios
 
 ### 1.3 Buscar usuario por ID
 ```
-GET http://localhost:8001/api/usuarios/{{usuarioId}}
+GET http://localhost:8001/api/usuarios/1
 ```
 **Respuesta esperada:** `200 OK`.
 
 ---
 
-### 1.4 Actualizar usuario
+### 1.4 Asignar rol
 ```
-PUT http://localhost:8001/api/usuarios/{{usuarioId}}
+PUT http://localhost:8001/api/usuarios/1/roles/1
+```
+**Respuesta esperada:** `200 OK`.
+
+---
+
+### 1.5 Cambiar estado
+```
+PUT http://localhost:8001/api/usuarios/1/estado
 Content-Type: application/json
 
-{
-  "nombre": "Juan Pérez Actualizado",
-  "email": "juan.actualizado@lubrimax.com",
-  "rol": "TECNICO"
-}
+"INACTIVO"
 ```
 **Respuesta esperada:** `200 OK`.
 
 ---
 
-### 1.5 Eliminar usuario
+### 1.6 Eliminar usuario
 ```
-DELETE http://localhost:8001/api/usuarios/{{usuarioId}}
+DELETE http://localhost:8001/api/usuarios/1
 ```
-**Respuesta esperada:** `204 No Content`.
+**Respuesta esperada:** `200 OK` o `204 No Content`.
 
 ---
 
@@ -98,52 +110,40 @@ POST http://localhost:8002/api/politicas
 Content-Type: application/json
 
 {
-  "nombre": "Política de Cambio de Aceite",
-  "descripcion": "Cambio cada 5000 km o 3 meses",
-  "activa": true
+  "tipo": "ACEITE",
+  "margen": 0.25,
+  "periodoVigencia": "2026",
+  "umbrales": {
+    "stockMinimo": 10,
+    "diasParaBajaRotacion": 30,
+    "diasSinRotacion": 60,
+    "limiteDeAcopio": 100.0
+  }
 }
 ```
 **Respuesta esperada:** `201 Created`.
-**Guardar:** `politicaId = <id del response>`
 
 ---
 
-### 2.2 Listar políticas
+### 2.2 Obtener política por ID
 ```
-GET http://localhost:8002/api/politicas
+GET http://localhost:8002/api/politicas/1
 ```
 **Respuesta esperada:** `200 OK`.
 
 ---
 
-### 2.3 Obtener política por ID
+### 2.3 Agregar promoción
 ```
-GET http://localhost:8002/api/politicas/{{politicaId}}
-```
-**Respuesta esperada:** `200 OK`.
-
----
-
-### 2.4 Actualizar política
-```
-PUT http://localhost:8002/api/politicas/{{politicaId}}
+PUT http://localhost:8002/api/politicas/1/promociones
 Content-Type: application/json
 
 {
-  "nombre": "Política Actualizada",
-  "descripcion": "Cambio cada 5000 km o 6 meses",
+  "descripcion": "Descuento del 10% por apertura",
   "activa": true
 }
 ```
 **Respuesta esperada:** `200 OK`.
-
----
-
-### 2.5 Eliminar política
-```
-DELETE http://localhost:8002/api/politicas/{{politicaId}}
-```
-**Respuesta esperada:** `204 No Content`.
 
 ---
 
@@ -157,29 +157,40 @@ POST http://localhost:8003/api/auditorias
 Content-Type: application/json
 
 {
-  "entidad": "OrdenServicio",
-  "entidadId": 1,
-  "accion": "CREACION",
-  "usuarioId": 1,
-  "detalle": "Se creó la orden de servicio 1"
+  "periodo": "2026-Q1",
+  "usuarioIdResponsable": 1
 }
 ```
 **Respuesta esperada:** `201 Created`.
-**Guardar:** `auditoriaId = <id del response>`
 
 ---
 
-### 3.2 Listar auditorias
+### 3.2 Consultar estado de auditoria
 ```
-GET http://localhost:8003/api/auditorias
+GET http://localhost:8003/api/auditorias/1
 ```
 **Respuesta esperada:** `200 OK`.
 
 ---
 
-### 3.3 Obtener auditoria por ID
+### 3.3 Reportar hallazgo
 ```
-GET http://localhost:8003/api/auditorias/{{auditoriaId}}
+POST http://localhost:8003/api/auditorias/1/hallazgos
+Content-Type: application/json
+
+{
+  "tipo": "INCONSISTENCIA",
+  "referencia": "ORDEN-1",
+  "magnitud": 10.0
+}
+```
+**Respuesta esperada:** `200 OK`.
+
+---
+
+### 3.4 Finalizar auditoría
+```
+PUT http://localhost:8003/api/auditorias/1/cierre
 ```
 **Respuesta esperada:** `200 OK`.
 
@@ -196,14 +207,11 @@ Content-Type: application/json
 
 {
   "nombre": "Carlos Rodríguez",
-  "dni": "12345678",
-  "telefono": "999888777",
-  "email": "carlos.rodriguez@gmail.com",
-  "direccion": "Av. Principal 123"
+  "numeroDocumento": "12345678",
+  "telefono": "999888777"
 }
 ```
 **Respuesta esperada:** `201 Created`.
-**Guardar:** `clienteId = <id del response>`
 
 ---
 
@@ -217,7 +225,7 @@ GET http://localhost:8004/api/clientes
 
 ### 4.3 Buscar cliente por ID
 ```
-GET http://localhost:8004/api/clientes/{{clienteId}}
+GET http://localhost:8004/api/clientes/1
 ```
 **Respuesta esperada:** `200 OK`.
 
@@ -225,13 +233,13 @@ GET http://localhost:8004/api/clientes/{{clienteId}}
 
 ### 4.4 Actualizar cliente
 ```
-PUT http://localhost:8004/api/clientes/{{clienteId}}
+PUT http://localhost:8004/api/clientes/1
 Content-Type: application/json
 
 {
   "nombre": "Carlos Rodríguez Actualizado",
-  "telefono": "998877665",
-  "email": "carlos.actualizado@gmail.com"
+  "numeroDocumento": "12345678",
+  "telefono": "998877665"
 }
 ```
 **Respuesta esperada:** `200 OK`.
@@ -240,7 +248,7 @@ Content-Type: application/json
 
 ### 4.5 Eliminar cliente
 ```
-DELETE http://localhost:8004/api/clientes/{{clienteId}}
+DELETE http://localhost:8004/api/clientes/1
 ```
 **Respuesta esperada:** `204 No Content`.
 
@@ -263,7 +271,6 @@ Content-Type: application/json
 }
 ```
 **Respuesta esperada:** `201 Created`.
-**Guardar:** `proveedorId = <id del response>`
 
 ---
 
@@ -277,7 +284,7 @@ GET http://localhost:8005/api/proveedores
 
 ### 5.3 Buscar proveedor por ID
 ```
-GET http://localhost:8005/api/proveedores/{{proveedorId}}
+GET http://localhost:8005/api/proveedores/1
 ```
 **Respuesta esperada:** `200 OK`.
 
@@ -285,7 +292,7 @@ GET http://localhost:8005/api/proveedores/{{proveedorId}}
 
 ### 5.4 Actualizar proveedor
 ```
-PUT http://localhost:8005/api/proveedores/{{proveedorId}}
+PUT http://localhost:8005/api/proveedores/1
 Content-Type: application/json
 
 {
@@ -301,7 +308,7 @@ Content-Type: application/json
 
 ### 5.5 Eliminar proveedor
 ```
-DELETE http://localhost:8005/api/proveedores/{{proveedorId}}
+DELETE http://localhost:8005/api/proveedores/1
 ```
 **Respuesta esperada:** `204 No Content`.
 **Nota:** Fallará con `400` si el proveedor tiene recepciones registradas.
@@ -323,16 +330,15 @@ GET http://localhost:8006/api/abastecimiento
 
 ### 6.2 Iniciar recepción de mercadería
 ```
-POST http://localhost:8006/api/abastecimiento/iniciar?proveedorId={{proveedorId}}&documento=FAC-001-00001234
+POST http://localhost:8006/api/abastecimiento/iniciar?proveedorId=1&documento=FAC-001-00001234
 ```
-**Respuesta esperada:** `201 Created` (estado `PENDIENTE`).
-**Guardar:** `recepcionId = <id del response>`
+**Respuesta esperada:** `201 Created` (estado `RECIBIDO`).
 
 ---
 
 ### 6.3 Buscar recepción por ID
 ```
-GET http://localhost:8006/api/abastecimiento/{{recepcionId}}
+GET http://localhost:8006/api/abastecimiento/1
 ```
 **Respuesta esperada:** `200 OK`.
 
@@ -340,26 +346,25 @@ GET http://localhost:8006/api/abastecimiento/{{recepcionId}}
 
 ### 6.4 Agregar línea verificada
 ```
-POST http://localhost:8006/api/abastecimiento/{{recepcionId}}/lineas?presentacion=1&cantidad=50&costo=25.50&lote=LOTE-2024-001&verificacion=CONFORME&productoId=1
+POST http://localhost:8006/api/abastecimiento/1/lineas?presentacion=1&cantidad=50&costo=25.50&lote=LOTE-2024-001&verificacion=APROBADO&productoId=1
 ```
-**Valores de `verificacion`:** `CONFORME`, `NO_CONFORME`, `PENDIENTE`
+**Valores de `verificacion`:** `APROBADO`, `RECHAZADO`, `REQUIERE_REVISION`
 **Respuesta esperada:** `200 OK`.
-**Guardar:** `lineaId = <id de la línea>`
 
 ---
 
 ### 6.5 Registrar observación en línea
 ```
-POST http://localhost:8006/api/abastecimiento/{{recepcionId}}/observaciones?lineaId={{lineaId}}&condicion=BUEN_ESTADO
+POST http://localhost:8006/api/abastecimiento/1/observaciones?lineaId=1&condicion=BUEN_ESTADO
 ```
-**Valores de `condicion`:** `BUEN_ESTADO`, `DANADO`, `VENCIDO`
+**Valores de `condicion`:** `BUEN_ESTADO`, `DAÑADO`, `VENCIDO`, `FALTANTE`
 **Respuesta esperada:** `200 OK`.
 
 ---
 
 ### 6.6 Dar conformidad a la recepción
 ```
-PUT http://localhost:8006/api/abastecimiento/{{recepcionId}}/conformar
+PUT http://localhost:8006/api/abastecimiento/1/conformar
 ```
 **Respuesta esperada:** `200 OK` con estado `CONFORME`.
 
@@ -367,7 +372,7 @@ PUT http://localhost:8006/api/abastecimiento/{{recepcionId}}/conformar
 
 ### 6.7 Cerrar recepción (sincroniza stock con msvc-inventario)
 ```
-PUT http://localhost:8006/api/abastecimiento/{{recepcionId}}/cerrar
+PUT http://localhost:8006/api/abastecimiento/1/cerrar
 ```
 **Respuesta esperada:** `200 OK` con estado `CERRADO`.
 **Efecto:** Llama a `POST /api/inventario/habilitar` en msvc-inventario (8007).
@@ -376,7 +381,7 @@ PUT http://localhost:8006/api/abastecimiento/{{recepcionId}}/cerrar
 
 ### 6.8 Verificar si proveedor tiene recepciones
 ```
-GET http://localhost:8006/api/abastecimiento/existe-por-proveedor?proveedorId={{proveedorId}}
+GET http://localhost:8006/api/abastecimiento/existe-por-proveedor?proveedorId=1
 ```
 **Respuesta esperada:** `200 OK` con `true` o `false`.
 
@@ -399,13 +404,12 @@ GET http://localhost:8007/api/inventario
 POST http://localhost:8007/api/inventario/habilitar?productoId=1&presentacionId=1&cantidad=50&recepcionId=1
 ```
 **Respuesta esperada:** `201 Created`.
-**Guardar:** `existenciaId = <id del response>`
 
 ---
 
 ### 7.3 Buscar existencia por ID
 ```
-GET http://localhost:8007/api/inventario/{{existenciaId}}
+GET http://localhost:8007/api/inventario/1
 ```
 **Respuesta esperada:** `200 OK`.
 
@@ -421,7 +425,7 @@ GET http://localhost:8007/api/inventario/producto/1/presentacion/1
 
 ### 7.5 Reservar stock
 ```
-PUT http://localhost:8007/api/inventario/{{existenciaId}}/reservar?orden=101&cantidad=5
+PUT http://localhost:8007/api/inventario/1/reservar?orden=101&cantidad=5
 ```
 **Respuesta esperada:** `200 OK`.
 
@@ -429,7 +433,7 @@ PUT http://localhost:8007/api/inventario/{{existenciaId}}/reservar?orden=101&can
 
 ### 7.6 Confirmar reserva
 ```
-PUT http://localhost:8007/api/inventario/{{existenciaId}}/confirmar-reserva?orden=101
+PUT http://localhost:8007/api/inventario/1/confirmar-reserva?orden=101
 ```
 **Respuesta esperada:** `200 OK`.
 
@@ -437,7 +441,7 @@ PUT http://localhost:8007/api/inventario/{{existenciaId}}/confirmar-reserva?orde
 
 ### 7.7 Liberar reserva
 ```
-PUT http://localhost:8007/api/inventario/{{existenciaId}}/liberar-reserva?orden=101
+PUT http://localhost:8007/api/inventario/1/liberar-reserva?orden=101
 ```
 **Respuesta esperada:** `200 OK`.
 
@@ -445,7 +449,7 @@ PUT http://localhost:8007/api/inventario/{{existenciaId}}/liberar-reserva?orden=
 
 ### 7.8 Consumir stock
 ```
-PUT http://localhost:8007/api/inventario/{{existenciaId}}/consumir?orden=101&cantidad=2
+PUT http://localhost:8007/api/inventario/1/consumir?orden=101&cantidad=2
 ```
 **Respuesta esperada:** `200 OK`.
 
@@ -453,7 +457,7 @@ PUT http://localhost:8007/api/inventario/{{existenciaId}}/consumir?orden=101&can
 
 ### 7.9 Eliminar existencia
 ```
-DELETE http://localhost:8007/api/inventario/{{existenciaId}}
+DELETE http://localhost:8007/api/inventario/1
 ```
 **Respuesta esperada:** `204 No Content`.
 
@@ -470,7 +474,7 @@ Content-Type: application/json
 
 {
   "placa": "ABC-123",
-  "clienteId": {{clienteId}},
+  "clienteId": 1,
   "kilometrajeActual": 45000,
   "estado": "ACTIVO",
   "fichaTecnica": {
@@ -483,10 +487,9 @@ Content-Type: application/json
   }
 }
 ```
-**Valores de `estado`:** `ACTIVO`, `INACTIVO`, `EN_MANTENIMIENTO`
+**Valores de `estado`:** `ACTIVO`, `INACTIVO`
 **Valores de `tipoCombustible`:** `GASOLINA`, `DIESEL`, `GLP`, `GNV`, `HIBRIDO`, `ELECTRICO`
 **Respuesta esperada:** `201 Created`.
-**Guardar:** `vehiculoId = <id del response>`
 
 ---
 
@@ -500,7 +503,7 @@ GET http://localhost:8008/api/vehiculos
 
 ### 8.3 Buscar vehículo por ID
 ```
-GET http://localhost:8008/api/vehiculos/{{vehiculoId}}
+GET http://localhost:8008/api/vehiculos/1
 ```
 **Respuesta esperada:** `200 OK`.
 
@@ -516,11 +519,11 @@ GET http://localhost:8008/api/vehiculos/placa/ABC-123
 
 ### 8.5 Actualizar vehículo
 ```
-PUT http://localhost:8008/api/vehiculos/{{vehiculoId}}
+PUT http://localhost:8008/api/vehiculos/1
 Content-Type: application/json
 
 {
-  "clienteId": {{clienteId}},
+  "clienteId": 1,
   "kilometrajeActual": 50000,
   "estado": "ACTIVO",
   "fichaTecnica": {
@@ -539,7 +542,7 @@ Content-Type: application/json
 
 ### 8.6 Eliminar vehículo
 ```
-DELETE http://localhost:8008/api/vehiculos/{{vehiculoId}}
+DELETE http://localhost:8008/api/vehiculos/1
 ```
 **Respuesta esperada:** `204 No Content`.
 
@@ -550,22 +553,21 @@ DELETE http://localhost:8008/api/vehiculos/{{vehiculoId}}
 Base URL: `http://localhost:8009/api/historiales`
 **Requiere:** msvc-vehiculos (8008).
 
-### 9.1 Registrar historial
+### 9.1 Registrar mantenimiento en historial
 ```
-POST http://localhost:8009/api/historiales
+POST http://localhost:8009/api/historiales/1/registros
 Content-Type: application/json
 
 {
-  "vehiculoId": {{vehiculoId}},
-  "ordenId": {{ordenId}},
-  "fechaServicio": "2025-06-15",
-  "tipoServicio": "CAMBIO_ACEITE",
+  "ordenId": 1,
+  "fechaAtencion": "2025-06-15",
   "kilometraje": 45000,
-  "descripcion": "Cambio de aceite 5W-30"
+  "tecnicoId": 1,
+  "costoTotal": 150.00,
+  "servicioCerrado": true
 }
 ```
-**Respuesta esperada:** `201 Created`.
-**Guardar:** `historialId = <id del response>`
+**Respuesta esperada:** `200 OK`.
 
 ---
 
@@ -577,17 +579,17 @@ GET http://localhost:8009/api/historiales
 
 ---
 
-### 9.3 Buscar historial por ID
+### 9.3 Historial por vehículo
 ```
-GET http://localhost:8009/api/historiales/{{historialId}}
+GET http://localhost:8009/api/historiales/1
 ```
 **Respuesta esperada:** `200 OK`.
 
 ---
 
-### 9.4 Historial por vehículo
+### 9.4 Resumen por vehículo
 ```
-GET http://localhost:8009/api/historiales/vehiculo/{{vehiculoId}}
+GET http://localhost:8009/api/historiales/1/resumen
 ```
 **Respuesta esperada:** `200 OK`.
 
@@ -604,14 +606,16 @@ POST http://localhost:8010/api/ordenes
 Content-Type: application/json
 
 {
-  "clienteId": {{clienteId}},
-  "vehiculoId": {{vehiculoId}},
-  "descripcion": "Cambio de aceite y filtros",
-  "kilometraje": 45000
+  "clienteId": 1,
+  "vehiculoId": 1,
+  "kilometrajeCapturado": 45000,
+  "mantenimientoSolicitado": {
+    "tipoServicio": "PREVENTIVO",
+    "descripcion": "Cambio de aceite y filtros"
+  }
 }
 ```
 **Respuesta esperada:** `201 Created`.
-**Guardar:** `ordenId = <id del response>`
 
 ---
 
@@ -625,25 +629,47 @@ GET http://localhost:8010/api/ordenes
 
 ### 10.3 Buscar orden por ID
 ```
-GET http://localhost:8010/api/ordenes/{{ordenId}}
+GET http://localhost:8010/api/ordenes/1
 ```
 **Respuesta esperada:** `200 OK`.
 
 ---
 
-### 10.4 Aprobar orden
+### 10.4 Agregar propuesta
 ```
-PUT http://localhost:8010/api/ordenes/{{ordenId}}/aprobar
+POST http://localhost:8010/api/ordenes/1/propuestas
+Content-Type: application/json
+
+{
+  "descripcion": "Propuesta de cambio de aceite"
+}
 ```
-**Respuesta esperada:** `200 OK` con estado `APROBADA`.
+**Respuesta esperada:** `200 OK` / `201 Created`.
 
 ---
 
-### 10.5 Cancelar orden
+### 10.5 Autorizar orden
 ```
-PUT http://localhost:8010/api/ordenes/{{ordenId}}/cancelar
+POST http://localhost:8010/api/ordenes/1/autorizaciones
+Content-Type: application/json
+
+{
+  "medio": "PRESENCIAL",
+  "alcance": "TOTAL",
+  "responsableAutorizacion": "Carlos Rodríguez"
+}
 ```
-**Respuesta esperada:** `200 OK` con estado `CANCELADA`.
+**Valores de `medio`:** `PRESENCIAL`, `LLAMADA`, `MENSAJERIA`
+**Valores de `alcance`:** `TOTAL`, `PARCIAL`, `RECHAZO`
+**Respuesta esperada:** `201 Created` con estado `AUTORIZADA`.
+
+---
+
+### 10.6 Emitir orden
+```
+PUT http://localhost:8010/api/ordenes/1/emitir
+```
+**Respuesta esperada:** `200 OK` con estado `EMITIDA`.
 
 ---
 
@@ -658,8 +684,8 @@ POST http://localhost:8011/api/ejecuciones
 Content-Type: application/json
 
 {
-  "ordenId": {{ordenId}},
-  "tecnicoUsuarioId": {{usuarioId}},
+  "ordenId": 1,
+  "tecnicoUsuarioId": 1,
   "kilometraje": 45000
 }
 ```
@@ -677,7 +703,7 @@ GET http://localhost:8011/api/ejecuciones
 
 ### 11.3 Obtener ejecución por ordenId
 ```
-GET http://localhost:8011/api/ejecuciones/{{ordenId}}
+GET http://localhost:8011/api/ejecuciones/1
 ```
 **Respuesta esperada:** `200 OK`.
 
@@ -685,7 +711,7 @@ GET http://localhost:8011/api/ejecuciones/{{ordenId}}
 
 ### 11.4 Iniciar ejecución
 ```
-POST http://localhost:8011/api/ejecuciones/{{ordenId}}/iniciar
+POST http://localhost:8011/api/ejecuciones/1/iniciar
 ```
 **Respuesta esperada:** `200 OK`.
 
@@ -693,7 +719,7 @@ POST http://localhost:8011/api/ejecuciones/{{ordenId}}/iniciar
 
 ### 11.5 Suspender ejecución
 ```
-POST http://localhost:8011/api/ejecuciones/{{ordenId}}/suspender
+POST http://localhost:8011/api/ejecuciones/1/suspender
 ```
 **Respuesta esperada:** `200 OK`.
 
@@ -701,23 +727,22 @@ POST http://localhost:8011/api/ejecuciones/{{ordenId}}/suspender
 
 ### 11.6 Registrar tarea
 ```
-POST http://localhost:8011/api/ejecuciones/{{ordenId}}/tareas
+POST http://localhost:8011/api/ejecuciones/1/tareas
 Content-Type: application/json
 
 {
   "servicioId": 1,
-  "tipo": "CAMBIO_ACEITE"
+  "tipo": "DRENAJE_ACEITE"
 }
 ```
-**Valores de `tipo`:** `CAMBIO_ACEITE`, `CAMBIO_FILTRO`, `REVISION_GENERAL`, `OTRO`
+**Valores de `tipo`:** `DRENAJE_ACEITE`, `CAMBIO_FILTRO`, `APLICACION_ADITIVO`, `REVISION_NIVELES`
 **Respuesta esperada:** `200 OK`.
-**Guardar:** `tareaId = <id de la tarea>`
 
 ---
 
 ### 11.7 Iniciar tarea
 ```
-POST http://localhost:8011/api/ejecuciones/{{ordenId}}/tareas/{{tareaId}}/iniciar
+POST http://localhost:8011/api/ejecuciones/1/tareas/1/iniciar
 ```
 **Respuesta esperada:** `200 OK`.
 
@@ -725,7 +750,7 @@ POST http://localhost:8011/api/ejecuciones/{{ordenId}}/tareas/{{tareaId}}/inicia
 
 ### 11.8 Completar tarea
 ```
-POST http://localhost:8011/api/ejecuciones/{{ordenId}}/tareas/{{tareaId}}/completar
+POST http://localhost:8011/api/ejecuciones/1/tareas/1/completar
 ```
 **Respuesta esperada:** `200 OK`.
 
@@ -733,7 +758,7 @@ POST http://localhost:8011/api/ejecuciones/{{ordenId}}/tareas/{{tareaId}}/comple
 
 ### 11.9 Registrar consumo de producto
 ```
-POST http://localhost:8011/api/ejecuciones/{{ordenId}}/consumos
+POST http://localhost:8011/api/ejecuciones/1/consumos
 Content-Type: application/json
 
 {
@@ -748,24 +773,24 @@ Content-Type: application/json
 
 ### 11.10 Declarar residuo generado
 ```
-POST http://localhost:8011/api/ejecuciones/{{ordenId}}/residuos
+POST http://localhost:8011/api/ejecuciones/1/residuos
 Content-Type: application/json
 
 {
-  "tareaId": {{tareaId}},
+  "tareaId": 1,
   "tipo": "ACEITE_USADO",
   "volumen": 3.5,
   "unidad": "LITROS"
 }
 ```
-**Valores de `tipo`:** `ACEITE_USADO`, `FILTROS_USADOS`, `BATERIAS_USADAS`
+**Valores de `tipo`:** `ACEITE_USADO`, `FILTRO_USADO`, `ENVASE_CONTAMINADO`, `MATERIAL_ABSORBENTE`
 **Respuesta esperada:** `200 OK`.
 
 ---
 
 ### 11.11 Calcular liquidación
 ```
-POST http://localhost:8011/api/ejecuciones/{{ordenId}}/liquidacion
+POST http://localhost:8011/api/ejecuciones/1/liquidacion
 ```
 **Respuesta esperada:** `200 OK` con el detalle de liquidación.
 
@@ -773,7 +798,7 @@ POST http://localhost:8011/api/ejecuciones/{{ordenId}}/liquidacion
 
 ### 11.12 Cerrar ejecución
 ```
-POST http://localhost:8011/api/ejecuciones/{{ordenId}}/cerrar
+POST http://localhost:8011/api/ejecuciones/1/cerrar
 ```
 **Respuesta esperada:** `200 OK` con estado `CERRADO`.
 
@@ -785,7 +810,7 @@ Base URL: `http://localhost:8012/api/agendas`
 
 ### 12.1 Obtener agenda de un técnico
 ```
-GET http://localhost:8012/api/agendas/{{usuarioId}}
+GET http://localhost:8012/api/agendas/1
 ```
 **Respuesta esperada:** `200 OK`.
 
@@ -793,23 +818,22 @@ GET http://localhost:8012/api/agendas/{{usuarioId}}
 
 ### 12.2 Asignar trabajo al técnico
 ```
-POST http://localhost:8012/api/agendas/{{usuarioId}}/asignaciones
+POST http://localhost:8012/api/agendas/1/asignaciones
 Content-Type: application/json
 
 {
-  "ordenId": {{ordenId}},
+  "ordenId": 1,
   "inicio": "2025-06-15T08:00:00",
   "fin": "2025-06-15T12:00:00"
 }
 ```
 **Respuesta esperada:** `200 OK`.
-**Guardar:** `asignacionId = <id de la asignación>`
 
 ---
 
 ### 12.3 Consultar disponibilidad
 ```
-GET http://localhost:8012/api/agendas/{{usuarioId}}/disponibilidad?inicio=2025-06-15T08:00:00&fin=2025-06-15T12:00:00
+GET http://localhost:8012/api/agendas/1/disponibilidad?inicio=2025-06-15T08:00:00&fin=2025-06-15T12:00:00
 ```
 **Respuesta esperada:** `200 OK` con `{ "disponible": true/false }`.
 
@@ -817,7 +841,7 @@ GET http://localhost:8012/api/agendas/{{usuarioId}}/disponibilidad?inicio=2025-0
 
 ### 12.4 Iniciar asignación
 ```
-POST http://localhost:8012/api/agendas/{{usuarioId}}/asignaciones/{{asignacionId}}/iniciar
+POST http://localhost:8012/api/agendas/1/asignaciones/1/iniciar
 ```
 **Respuesta esperada:** `200 OK` con estado `EN_CURSO`.
 
@@ -825,7 +849,7 @@ POST http://localhost:8012/api/agendas/{{usuarioId}}/asignaciones/{{asignacionId
 
 ### 12.5 Liberar asignación
 ```
-POST http://localhost:8012/api/agendas/{{usuarioId}}/asignaciones/{{asignacionId}}/liberar
+POST http://localhost:8012/api/agendas/1/asignaciones/1/liberar
 ```
 **Respuesta esperada:** `200 OK` con estado `LIBERADA`.
 
@@ -833,7 +857,7 @@ POST http://localhost:8012/api/agendas/{{usuarioId}}/asignaciones/{{asignacionId
 
 ### 12.6 Listar asignaciones del técnico
 ```
-GET http://localhost:8012/api/agendas/{{usuarioId}}/asignaciones
+GET http://localhost:8012/api/agendas/1/asignaciones
 ```
 **Respuesta esperada:** `200 OK`.
 
@@ -854,7 +878,7 @@ Content-Type: application/json
   "unidad": "LITROS"
 }
 ```
-**Valores de `tipoResiduo`:** `ACEITE_USADO`, `FILTROS_USADOS`, `BATERIAS_USADAS`
+**Valores de `tipoResiduo`:** `ACEITE_USADO`, `FILTRO_USADO`, `ENVASE_CONTAMINADO`, `MATERIAL_ABSORBENTE`
 **Respuesta esperada:** `201 Created`.
 
 ---
@@ -895,7 +919,7 @@ POST http://localhost:8013/api/acopios/ACEITE_USADO/residuos
 Content-Type: application/json
 
 {
-  "ordenId": {{ordenId}},
+  "ordenId": 1,
   "declaracionOrigenId": 1,
   "cantidad": 3.5,
   "unidad": "LITROS",
@@ -903,13 +927,12 @@ Content-Type: application/json
 }
 ```
 **Respuesta esperada:** `201 Created`.
-**Guardar:** `residuoId = <id del response>`
 
 ---
 
 ### 13.6 Almacenar residuo
 ```
-POST http://localhost:8013/api/acopios/ACEITE_USADO/residuos/{{residuoId}}/almacenar
+POST http://localhost:8013/api/acopios/ACEITE_USADO/residuos/1/almacenar
 ```
 **Respuesta esperada:** `200 OK`.
 
@@ -934,13 +957,12 @@ POST http://localhost:8014/api/entregas
 Content-Type: application/json
 
 {
-  "operadorId": {{operadorId}},
-  "usuarioResponsableId": {{usuarioId}},
+  "operadorId": 1,
+  "usuarioResponsableId": 1,
   "fechaEntrega": "2025-07-10"
 }
 ```
 **Respuesta esperada:** `201 Created`.
-**Guardar:** `entregaId = <id del response>`
 
 ---
 
@@ -954,7 +976,7 @@ GET http://localhost:8014/api/entregas
 
 ### 14.3 Obtener entrega por ID
 ```
-GET http://localhost:8014/api/entregas/{{entregaId}}
+GET http://localhost:8014/api/entregas/1
 ```
 **Respuesta esperada:** `200 OK`.
 
@@ -962,24 +984,23 @@ GET http://localhost:8014/api/entregas/{{entregaId}}
 
 ### 14.4 Agregar línea de residuos
 ```
-POST http://localhost:8014/api/entregas/{{entregaId}}/lineas
+POST http://localhost:8014/api/entregas/1/lineas
 Content-Type: application/json
 
 {
   "tipoResiduo": "ACEITE_USADO",
   "cantidad": 3.5,
   "unidad": "LITROS",
-  "residuosIds": [{{residuoId}}]
+  "residuosIds": [1]
 }
 ```
 **Respuesta esperada:** `200 OK`.
-**Guardar:** `lineaEntregaId = <id de la línea>`
 
 ---
 
 ### 14.5 Eliminar línea de la entrega
 ```
-DELETE http://localhost:8014/api/entregas/{{entregaId}}/lineas/{{lineaEntregaId}}
+DELETE http://localhost:8014/api/entregas/1/lineas/1
 ```
 **Respuesta esperada:** `200 OK`.
 
@@ -987,7 +1008,7 @@ DELETE http://localhost:8014/api/entregas/{{entregaId}}/lineas/{{lineaEntregaId}
 
 ### 14.6 Registrar manifiesto de residuos
 ```
-POST http://localhost:8014/api/entregas/{{entregaId}}/manifiesto
+POST http://localhost:8014/api/entregas/1/manifiesto
 Content-Type: application/json
 
 {
@@ -1004,7 +1025,7 @@ Content-Type: application/json
 
 ### 14.7 Ejecutar entrega
 ```
-POST http://localhost:8014/api/entregas/{{entregaId}}/ejecutar
+POST http://localhost:8014/api/entregas/1/ejecutar
 ```
 **Respuesta esperada:** `200 OK`.
 
@@ -1012,7 +1033,7 @@ POST http://localhost:8014/api/entregas/{{entregaId}}/ejecutar
 
 ### 14.8 Conformar entrega
 ```
-POST http://localhost:8014/api/entregas/{{entregaId}}/conformar
+POST http://localhost:8014/api/entregas/1/conformar
 ```
 **Respuesta esperada:** `200 OK` con estado `CONFORME`.
 
@@ -1037,7 +1058,6 @@ Content-Type: application/json
 }
 ```
 **Respuesta esperada:** `201 Created`.
-**Guardar:** `operadorId = <id del response>`
 
 ---
 
@@ -1051,7 +1071,7 @@ GET http://localhost:8015/api/operadores
 
 ### 15.3 Obtener operador por ID
 ```
-GET http://localhost:8015/api/operadores/{{operadorId}}
+GET http://localhost:8015/api/operadores/1
 ```
 **Respuesta esperada:** `200 OK`.
 
@@ -1059,7 +1079,7 @@ GET http://localhost:8015/api/operadores/{{operadorId}}
 
 ### 15.4 Actualizar datos del operador
 ```
-PUT http://localhost:8015/api/operadores/{{operadorId}}
+PUT http://localhost:8015/api/operadores/1
 Content-Type: application/json
 
 {
@@ -1073,7 +1093,7 @@ Content-Type: application/json
 
 ### 15.5 Actualizar autorización
 ```
-PUT http://localhost:8015/api/operadores/{{operadorId}}/autorizacion
+PUT http://localhost:8015/api/operadores/1/autorizacion
 Content-Type: application/json
 
 {
@@ -1088,7 +1108,7 @@ Content-Type: application/json
 
 ### 15.6 Consultar vigencia del operador
 ```
-GET http://localhost:8015/api/operadores/{{operadorId}}/vigencia?fecha=2025-06-15
+GET http://localhost:8015/api/operadores/1/vigencia?fecha=2025-06-15
 ```
 **Respuesta esperada:** `200 OK` con campo `vigente: true/false`.
 
@@ -1099,6 +1119,229 @@ GET http://localhost:8015/api/operadores/{{operadorId}}/vigencia?fecha=2025-06-1
 GET http://localhost:8015/api/operadores/vigentes?fecha=2025-06-15
 ```
 **Respuesta esperada:** `200 OK`.
+
+---
+
+## 16. msvc-producto (puerto 8016)
+
+Directorio: `msvc-agregar-producto`. Base URL: `http://localhost:8016/api/productos`.
+
+### Crear producto y presentación
+```http
+POST http://localhost:8016/api/productos
+Content-Type: application/json
+
+{
+  "codigo": "ACE-5W30-001",
+  "nombre": "Aceite sintético 5W-30",
+  "marca": "LubriMax",
+  "categoria": "ACEITE",
+  "tipoAceite": "SINTETICO",
+  "viscosidad": "5W-30",
+  "especificacion": { "normaApi": "SP", "normaAcea": "C3" },
+  "intervalo": { "kilometros": 10000, "meses": 12 },
+  "estado": "ACTIVO",
+  "presentaciones": [
+    { "contenido": 1.0, "unidad": "LITRO", "envase": "BOTELLA", "activa": true }
+  ]
+}
+```
+Esperado: `201 Created`. 
+
+```http
+GET http://localhost:8016/api/productos
+GET http://localhost:8016/api/productos/1
+PUT http://localhost:8016/api/productos/1/desactivar
+```
+Esperado: `200 OK`.
+
+```http
+POST http://localhost:8016/api/productos/1/presentaciones
+Content-Type: application/json
+
+{ "contenido": 4.0, "unidad": "LITRO", "envase": "GALON", "activa": true }
+```
+
+---
+
+## 17. msvc-servicio-mantenimiento (puerto 8017)
+
+Base URL: `http://localhost:8017/api/servicios-mantenimiento`.
+
+```http
+POST http://localhost:8017/api/servicios-mantenimiento
+Content-Type: application/json
+
+{
+  "tipo": "CAMBIO_ACEITE",
+  "descripcion": "Cambio preventivo de aceite de motor",
+  "activo": true,
+  "categoriasConsumidas": ["ACEITE"]
+}
+```
+Esperado: `201 Created`. 
+
+```http
+GET http://localhost:8017/api/servicios-mantenimiento
+GET http://localhost:8017/api/servicios-mantenimiento/1
+DELETE http://localhost:8017/api/servicios-mantenimiento/1
+```
+Esperado: `200 OK`, `200 OK` y `204 No Content`.
+
+---
+
+## 18. msvc-matriz-compatibilidad (puerto 8018)
+
+Base URL: `http://localhost:8018/api/matrices-compatibilidad`.
+
+```http
+POST http://localhost:8018/api/matrices-compatibilidad
+Content-Type: application/json
+
+{
+  "reglas": [{
+    "criterio": {
+      "tipoDeMotor": "GASOLINA",
+      "cilindrada": 1800,
+      "combustible": "GASOLINA",
+      "anioDesde": 2015,
+      "anioHasta": 2026
+    },
+    "productosAdmitidos": [1]
+  }]
+}
+```
+Esperado: `201 Created`. 
+
+```http
+GET http://localhost:8018/api/matrices-compatibilidad/1/compatible?motor=GASOLINA&cilindrada=1800&combustible=GASOLINA&anio=2020&productoId=1
+GET http://localhost:8018/api/matrices-compatibilidad/1/productos?motor=GASOLINA&cilindrada=1800&combustible=GASOLINA&anio=2020
+```
+Esperado: `200 OK`, `compatible: true` y una lista con `productoId`.
+
+---
+
+## 19. msvc-lista-precio-base (puerto 8019)
+
+Base URL: `http://localhost:8019/api/listas-precios`.
+
+```http
+POST http://localhost:8019/api/listas-precios
+Content-Type: application/json
+
+{
+  "vigencia": { "desde": "2026-01-01T00:00:00", "hasta": "2026-12-31T23:59:59" },
+  "precios": []
+}
+```
+Esperado: `201 Created`. 
+
+```http
+POST http://localhost:8019/api/listas-precios/1/precios
+Content-Type: application/json
+
+{ "tipoReferencia": "PRESENTACION", "referenciaId": 1, "precio": 100.00, "moneda": "PEN" }
+```
+
+```http
+PUT http://localhost:8019/api/listas-precios/1/activar
+GET http://localhost:8019/api/listas-precios/vigente/precio?tipo=PRESENTACION&referenciaId=1
+```
+Esperado: `200 OK`.
+
+---
+
+## 20. msvc-serie-comprobante (puerto 8021)
+
+Base URL: `http://localhost:8021/api/series`. Levantar antes de comprobantes y notas.
+
+```http
+POST http://localhost:8021/api/series
+Content-Type: application/json
+
+{ "codigo": "B001", "tipo": "BOLETA", "rangoInicio": 1, "rangoFin": 99999999, "activa": true }
+```
+Esperado: `201 Created`. 
+
+```http
+POST http://localhost:8021/api/series
+Content-Type: application/json
+
+{ "codigo": "BC01", "tipo": "NOTA_CREDITO", "rangoInicio": 1, "rangoFin": 99999999, "activa": true }
+```
+
+```http
+POST http://localhost:8021/api/series/1/siguiente
+```
+Esperado: `200 OK` y `{"numero":"B001-00000001"}`. El comprobante siguiente usará el correlativo 2.
+
+---
+
+## 21. msvc-comprobante (puerto 8020)
+
+Base URL: `http://localhost:8020/api/comprobantes`. Requiere ejecución cerrada en 8011 y serie en 8021. Las líneas más 18% de IGV deben coincidir con `liquidacion.total`.
+
+```http
+POST http://localhost:8020/api/comprobantes
+Content-Type: application/json
+
+{
+  "ordenId": 1,
+  "clienteId": 1,
+  "serieId": 1,
+  "tipo": "BOLETA",
+  "receptorNombre": "Carlos Rodríguez",
+  "receptorDocumento": "12345678",
+  "moneda": "PEN",
+  "lineas": [{
+    "tipo": "MANO_DE_OBRA",
+    "referenciaId": 1,
+    "descripcion": "Cambio preventivo de aceite",
+    "cantidad": 1,
+    "precioUnitario": 100.00
+  }]
+}
+```
+Esperado: `201 Created`. 
+
+```http
+POST http://localhost:8020/api/comprobantes/1/pagos
+Content-Type: application/json
+
+{ "medio": "YAPE", "monto": 118.00 }
+```
+Esperado: `200 OK` y estado `PAGADO`.
+
+```http
+GET http://localhost:8020/api/comprobantes
+GET http://localhost:8020/api/comprobantes/1
+```
+
+---
+
+## 22. msvc-nota-credito (puerto 8022)
+
+Base URL: `http://localhost:8022/api/notas-credito`. Requiere comprobante en 8020 y serie de nota en 8021.
+
+```http
+POST http://localhost:8022/api/notas-credito
+Content-Type: application/json
+
+{
+  "comprobanteId": 1,
+  "serieId": 2,
+  "motivo": "ERROR_MONTO",
+  "monto": 18.00,
+  "moneda": "PEN"
+}
+```
+Esperado: `201 Created`. 
+
+```http
+GET http://localhost:8022/api/notas-credito
+GET http://localhost:8022/api/notas-credito/1
+```
+Esperado: `200 OK`.
 
 ---
 
@@ -1129,6 +1372,16 @@ Ejecutar en este orden para demostrar la integración entre microservicios:
 20. [msvc-entrega-operador]        POST /api/entregas/{id}/manifiesto
 21. [msvc-entrega-operador]        POST /api/entregas/{id}/ejecutar
 22. [msvc-entrega-operador]        POST /api/entregas/{id}/conformar
+23. [msvc-producto]                POST /api/productos                         → registra producto y presentación
+24. [msvc-servicio-mantenimiento]  POST /api/servicios-mantenimiento           → registra servicio preventivo
+25. [msvc-matriz-compatibilidad]   POST /api/matrices-compatibilidad           → vincula ficha técnica y producto
+26. [msvc-lista-precio-base]       POST /api/listas-precios                    → crea lista
+27. [msvc-lista-precio-base]       POST /api/listas-precios/{id}/precios       → agrega precios
+28. [msvc-lista-precio-base]       PUT  /api/listas-precios/{id}/activar       → deja una única lista vigente
+29. [msvc-serie-comprobante]       POST /api/series                            → crea series fiscales
+30. [msvc-comprobante]             POST /api/comprobantes                      → revalida ejecución cerrada y emite
+31. [msvc-comprobante]             POST /api/comprobantes/{id}/pagos           → completa el pago
+32. [msvc-nota-credito]            POST /api/notas-credito                     → ajusta el comprobante
 ```
 
 ---

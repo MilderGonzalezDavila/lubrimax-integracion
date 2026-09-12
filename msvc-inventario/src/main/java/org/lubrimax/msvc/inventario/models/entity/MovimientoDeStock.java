@@ -1,8 +1,16 @@
 package org.lubrimax.msvc.inventario.models.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+
 import org.lubrimax.msvc.inventario.models.MotivoDeAjuste;
 import org.lubrimax.msvc.inventario.models.TipoMovimiento;
 
@@ -23,7 +31,7 @@ public class MovimientoDeStock {
     private TipoMovimiento tipo;
 
     @Column(name = "tipo_origen")
-    private String origen; // Cambiado a 'origen' según el diagrama (OrigenDeMovimiento)
+    private String origen;
 
     @NotNull
     @Positive
@@ -32,20 +40,23 @@ public class MovimientoDeStock {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "motivo_ajuste")
-    private MotivoDeAjuste motivo; // ¡Agregado tal cual pide tu diagrama!
+    private MotivoDeAjuste motivo;
 
     @NotNull
     @Column(nullable = false)
-    private LocalDateTime momento; // Cambiado a 'momento' y tipo DateTime (LocalDateTime) según diagrama
+    private LocalDateTime momento;
 
     @Column(name = "referencia_origen")
     private Long referenciaOrigen;
 
-    public MovimientoDeStock() {
-    }
+    public MovimientoDeStock() {}
 
-
-    public MovimientoDeStock(TipoMovimiento tipo, String origen, BigDecimal cantidad, MotivoDeAjuste motivo, Long referenciaOrigen) {
+    public MovimientoDeStock(
+            TipoMovimiento tipo,
+            String origen,
+            BigDecimal cantidad,
+            MotivoDeAjuste motivo,
+            Long referenciaOrigen) {
         this.tipo = tipo;
         this.origen = origen;
         this.cantidad = cantidad;
@@ -54,24 +65,59 @@ public class MovimientoDeStock {
         this.momento = LocalDateTime.now();
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public TipoMovimiento getTipo() { return tipo; }
-    public void setTipo(TipoMovimiento tipo) { this.tipo = tipo; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getOrigen() { return origen; }
-    public void setOrigen(String origen) { this.origen = origen; }
+    public TipoMovimiento getTipo() {
+        return tipo;
+    }
 
-    public BigDecimal getCantidad() { return cantidad; }
-    public void setCantidad(BigDecimal cantidad) { this.cantidad = cantidad; }
+    public void setTipo(TipoMovimiento tipo) {
+        this.tipo = tipo;
+    }
 
-    public MotivoDeAjuste getMotivo() { return motivo; }
-    public void setMotivo(MotivoDeAjuste motivo) { this.motivo = motivo; }
+    public String getOrigen() {
+        return origen;
+    }
 
-    public LocalDateTime getMomento() { return momento; }
-    public void setMomento(LocalDateTime momento) { this.momento = momento; }
+    public void setOrigen(String origen) {
+        this.origen = origen;
+    }
 
-    public Long getReferenciaOrigen() { return referenciaOrigen; }
-    public void setReferenciaOrigen(Long referenciaOrigen) { this.referenciaOrigen = referenciaOrigen; }
+    public BigDecimal getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(BigDecimal cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public MotivoDeAjuste getMotivo() {
+        return motivo;
+    }
+
+    public void setMotivo(MotivoDeAjuste motivo) {
+        this.motivo = motivo;
+    }
+
+    public LocalDateTime getMomento() {
+        return momento;
+    }
+
+    public void setMomento(LocalDateTime momento) {
+        this.momento = momento;
+    }
+
+    public Long getReferenciaOrigen() {
+        return referenciaOrigen;
+    }
+
+    public void setReferenciaOrigen(Long referenciaOrigen) {
+        this.referenciaOrigen = referenciaOrigen;
+    }
 }

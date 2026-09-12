@@ -24,15 +24,19 @@ public class AcopioTemporalServiceImpl implements AcopioTemporalService {
     @Override
     @Transactional
     public AcopioTemporal crear(TipoDeResiduo tipo, CapacidadDeAcopio capacidad) {
-        if (repository.existsById(tipo)) throw new IllegalArgumentException("Ya existe un acopio para " + tipo);
+        if (repository.existsById(tipo)) {
+            throw new IllegalArgumentException("Ya existe un acopio para " + tipo);
+        }
         return repository.save(new AcopioTemporal(tipo, capacidad));
     }
 
     @Override
     @Transactional(readOnly = true)
     public AcopioTemporal obtener(TipoDeResiduo tipo) {
-        return repository.findById(tipo)
-                .orElseThrow(() -> new IllegalArgumentException("No existe un acopio para " + tipo));
+        return repository
+                .findById(tipo)
+                .orElseThrow(
+                        () -> new IllegalArgumentException("No existe un acopio para " + tipo));
     }
 
     @Override
@@ -45,17 +49,30 @@ public class AcopioTemporalServiceImpl implements AcopioTemporalService {
 
     @Override
     @Transactional
-    public ResiduoGenerado registrarResiduo(TipoDeResiduo tipo, Long ordenId, Long declaracionOrigenId,
-                                            CantidadDeResiduo cantidad, LocalDateTime fechaGeneracion) {
+    public ResiduoGenerado registrarResiduo(
+            TipoDeResiduo tipo,
+            Long ordenId,
+            Long declaracionOrigenId,
+            CantidadDeResiduo cantidad,
+            LocalDateTime fechaGeneracion) {
         AcopioTemporal acopio = obtener(tipo);
         if (declaracionOrigenId != null) {
-            ResiduoGenerado existente = acopio.getResiduos().stream()
-                    .filter(residuo -> ordenId.equals(residuo.getOrdenId())
-                            && declaracionOrigenId.equals(residuo.getDeclaracionOrigenId()))
-                    .findFirst().orElse(null);
-            if (existente != null) return existente;
+            ResiduoGenerado existente =
+                    acopio.getResiduos().stream()
+                            .filter(
+                                    residuo ->
+                                            ordenId.equals(residuo.getOrdenId())
+                                                    && declaracionOrigenId.equals(
+                                                            residuo.getDeclaracionOrigenId()))
+                            .findFirst()
+                            .orElse(null);
+            if (existente != null) {
+                return existente;
+            }
         }
-        ResiduoGenerado residuo = acopio.registrarGeneracion(ordenId, declaracionOrigenId, tipo, cantidad, fechaGeneracion);
+        ResiduoGenerado residuo =
+                acopio.registrarGeneracion(
+                        ordenId, declaracionOrigenId, tipo, cantidad, fechaGeneracion);
         repository.save(acopio);
         return residuo;
     }
@@ -70,7 +87,8 @@ public class AcopioTemporalServiceImpl implements AcopioTemporalService {
 
     @Override
     @Transactional
-    public AcopioTemporal confirmarEntrega(TipoDeResiduo tipo, Long entregaId, List<Long> residuosIds) {
+    public AcopioTemporal confirmarEntrega(
+            TipoDeResiduo tipo, Long entregaId, List<Long> residuosIds) {
         AcopioTemporal acopio = obtener(tipo);
         acopio.confirmarEntrega(entregaId, residuosIds);
         return repository.save(acopio);

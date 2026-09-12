@@ -22,7 +22,12 @@ public class Cliente {
     private String nombre;
 
     @NotBlank(message = "es obligatorio")
-    @Column(name = "numero_documento", nullable = false, unique = true, updatable = false, length = 20)
+    @Column(
+            name = "numero_documento",
+            nullable = false,
+            unique = true,
+            updatable = false,
+            length = 20)
     private String numeroDocumento;
 
     @NotBlank(message = "es obligatorio")
@@ -30,8 +35,7 @@ public class Cliente {
     @Column(nullable = false, length = 20)
     private String telefono;
 
-    public Cliente() {
-    }
+    public Cliente() {}
 
     public Cliente(String nombre, String numeroDocumento, String telefono) {
         this.nombre = nombre;

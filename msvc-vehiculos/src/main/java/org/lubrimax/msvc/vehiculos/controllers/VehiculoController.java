@@ -1,6 +1,7 @@
 package org.lubrimax.msvc.vehiculos.controllers;
 
 import jakarta.validation.Valid;
+
 import org.lubrimax.msvc.vehiculos.models.entities.Vehiculo;
 import org.lubrimax.msvc.vehiculos.services.VehiculoService;
 import org.springframework.http.HttpStatus;
@@ -55,13 +56,15 @@ public class VehiculoController {
             return validar(result);
         }
         if (service.porPlaca(vehiculo.getPlaca()).isPresent()) {
-            return ResponseEntity.badRequest().body(Map.of("mensaje", "Ya existe un vehículo con esa placa"));
+            return ResponseEntity.badRequest()
+                    .body(Map.of("mensaje", "Ya existe un vehículo con esa placa"));
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(service.guardar(vehiculo));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> editar(@PathVariable Long id, @Valid @RequestBody Vehiculo vehiculo, BindingResult result) {
+    public ResponseEntity<?> editar(
+            @PathVariable Long id, @Valid @RequestBody Vehiculo vehiculo, BindingResult result) {
         if (result.hasErrors()) {
             return validar(result);
         }
@@ -76,15 +79,15 @@ public class VehiculoController {
             return ResponseEntity.badRequest().body(Map.of("mensaje", "La placa es inmutable"));
         }
         if (vehiculo.getKilometrajeActual() < vehiculoActual.getKilometrajeActual()) {
-            return ResponseEntity.badRequest().body(Map.of("mensaje", "El kilometraje no puede disminuir"));
+            return ResponseEntity.badRequest()
+                    .body(Map.of("mensaje", "El kilometraje no puede disminuir"));
         }
 
         vehiculoActual.actualizarDatos(
                 vehiculo.getFichaTecnica(),
                 vehiculo.getClienteId(),
                 vehiculo.getKilometrajeActual(),
-                vehiculo.getEstado()
-        );
+                vehiculo.getEstado());
         return ResponseEntity.ok(service.guardar(vehiculoActual));
     }
 
@@ -99,9 +102,15 @@ public class VehiculoController {
 
     private ResponseEntity<Map<String, String>> validar(BindingResult result) {
         Map<String, String> errores = new LinkedHashMap<>();
-        result.getFieldErrors().forEach(error ->
-                errores.put(error.getField(), "El campo " + error.getField() + " " + error.getDefaultMessage())
-        );
+        result.getFieldErrors()
+                .forEach(
+                        error ->
+                                errores.put(
+                                        error.getField(),
+                                        "El campo "
+                                                + error.getField()
+                                                + " "
+                                                + error.getDefaultMessage()));
         return ResponseEntity.badRequest().body(errores);
     }
 }

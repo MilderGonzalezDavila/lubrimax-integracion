@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 
-@FeignClient(name = "msvc-inventario", url = "http://localhost:8010/api/inventario")
+@FeignClient(name = "msvc-inventario", url = "http://localhost:8007/api/inventario")
 public interface InventarioClienteRest {
 
     @PostMapping("/habilitar")
@@ -14,6 +14,5 @@ public interface InventarioClienteRest {
             @RequestParam Long productoId,
             @RequestParam Long presentacionId,
             @RequestParam BigDecimal cantidad,
-            @RequestParam Long recepcionId
-    );
+            @RequestParam Long recepcionId);
 }

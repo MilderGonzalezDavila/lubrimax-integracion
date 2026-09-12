@@ -12,8 +12,7 @@ public class ServicioRealizadoResumen {
     @NotBlank(message = "es obligatoria")
     private String descripcion;
 
-    public ServicioRealizadoResumen() {
-    }
+    public ServicioRealizadoResumen() {}
 
     public String getTipoServicio() {
         return tipoServicio;

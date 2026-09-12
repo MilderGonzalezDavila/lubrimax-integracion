@@ -13,6 +13,7 @@ public interface OperadorAutorizadoRepository extends CrudRepository<OperadorAut
 
     Optional<OperadorAutorizado> findByAutorizacionRegistroEors(String registroEors);
 
-    List<OperadorAutorizado> findByAutorizacionPeriodoDeVigenciaDesdeLessThanEqualAndAutorizacionPeriodoDeVigenciaHastaGreaterThanEqual(
-            LocalDate fechaDesde, LocalDate fechaHasta);
+    List<OperadorAutorizado>
+            findByAutorizacionPeriodoDeVigenciaDesdeLessThanEqualAndAutorizacionPeriodoDeVigenciaHastaGreaterThanEqual(
+                    LocalDate fechaDesde, LocalDate fechaHasta);
 }

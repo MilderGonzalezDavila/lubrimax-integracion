@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
 import org.lubrimax.msvc_agenda_tecnico.models.EstadoDeAsignacion;
 import org.lubrimax.msvc_agenda_tecnico.models.PeriodoDeTrabajo;
 
@@ -21,18 +22,20 @@ public class AsignacionDeTrabajo {
 
     private Long ordenId;
 
-    @Embedded
-    private PeriodoDeTrabajo periodo;
+    @Embedded private PeriodoDeTrabajo periodo;
 
     @Enumerated(EnumType.STRING)
     private EstadoDeAsignacion estado;
 
-    protected AsignacionDeTrabajo() {
-    }
+    protected AsignacionDeTrabajo() {}
 
     public AsignacionDeTrabajo(Long ordenId, PeriodoDeTrabajo periodo) {
-        if (ordenId == null) throw new IllegalArgumentException("La orden es obligatoria");
-        if (periodo == null) throw new IllegalArgumentException("El periodo de trabajo es obligatorio");
+        if (ordenId == null) {
+            throw new IllegalArgumentException("La orden es obligatoria");
+        }
+        if (periodo == null) {
+            throw new IllegalArgumentException("El periodo de trabajo es obligatorio");
+        }
         this.ordenId = ordenId;
         this.periodo = periodo;
         this.estado = EstadoDeAsignacion.ASIGNADA;
@@ -49,7 +52,9 @@ public class AsignacionDeTrabajo {
     }
 
     public void liberar() {
-        if (estado == EstadoDeAsignacion.LIBERADA) return;
+        if (estado == EstadoDeAsignacion.LIBERADA) {
+            return;
+        }
         estado = EstadoDeAsignacion.LIBERADA;
     }
 
@@ -57,8 +62,19 @@ public class AsignacionDeTrabajo {
         return estado == EstadoDeAsignacion.ASIGNADA || estado == EstadoDeAsignacion.EN_CURSO;
     }
 
-    public Long getId() { return id; }
-    public Long getOrdenId() { return ordenId; }
-    public PeriodoDeTrabajo getPeriodo() { return periodo; }
-    public EstadoDeAsignacion getEstado() { return estado; }
+    public Long getId() {
+        return id;
+    }
+
+    public Long getOrdenId() {
+        return ordenId;
+    }
+
+    public PeriodoDeTrabajo getPeriodo() {
+        return periodo;
+    }
+
+    public EstadoDeAsignacion getEstado() {
+        return estado;
+    }
 }

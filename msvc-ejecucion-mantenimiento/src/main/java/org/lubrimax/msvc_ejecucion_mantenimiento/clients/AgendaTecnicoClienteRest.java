@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface AgendaTecnicoClienteRest {
 
     @GetMapping("/api/agendas/{usuarioId}/asignaciones/orden/{ordenId}/valida")
-    AsignacionResponse validarAsignacion(@PathVariable("usuarioId") Long usuarioId,
-                                         @PathVariable("ordenId") Long ordenId);
+    AsignacionResponse validarAsignacion(
+            @PathVariable("usuarioId") Long usuarioId, @PathVariable("ordenId") Long ordenId);
 
     record AsignacionResponse(boolean valida) {}
 }

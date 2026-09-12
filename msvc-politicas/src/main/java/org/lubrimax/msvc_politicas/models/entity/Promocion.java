@@ -1,6 +1,7 @@
 package org.lubrimax.msvc_politicas.models.entity;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
 
 @Entity
@@ -16,14 +17,10 @@ public class Promocion {
     private LocalDate vigenciaInicio;
     private LocalDate vigenciaFin;
 
-
-
     public boolean solaparConOtra(Promocion otraPromocion) {
-        return (this.vigenciaInicio.isBefore(otraPromocion.getVigenciaFin()) &&
-                this.vigenciaFin.isAfter(otraPromocion.getVigenciaInicio()));
+        return (this.vigenciaInicio.isBefore(otraPromocion.getVigenciaFin())
+                && this.vigenciaFin.isAfter(otraPromocion.getVigenciaInicio()));
     }
-
-
 
     public Long getId() {
         return id;

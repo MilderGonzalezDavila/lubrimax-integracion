@@ -12,8 +12,7 @@ public class MantenimientoSolicitado {
     @NotBlank(message = "es obligatoria")
     private String descripcion;
 
-    public MantenimientoSolicitado() {
-    }
+    public MantenimientoSolicitado() {}
 
     public String getTipoServicio() {
         return tipoServicio;

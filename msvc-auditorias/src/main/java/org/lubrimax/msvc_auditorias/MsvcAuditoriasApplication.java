@@ -6,8 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class MsvcAuditoriasApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(MsvcAuditoriasApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(MsvcAuditoriasApplication.class, args);
+    }
 }

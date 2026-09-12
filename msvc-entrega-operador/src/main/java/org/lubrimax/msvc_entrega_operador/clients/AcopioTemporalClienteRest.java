@@ -16,9 +16,13 @@ public interface AcopioTemporalClienteRest {
     List<ResiduoResponse> listarResiduos(@PathVariable("tipo") String tipo);
 
     @PostMapping("/api/acopios/{tipo}/entregas/confirmar")
-    void confirmarEntrega(@PathVariable("tipo") String tipo, @RequestBody ConfirmarEntregaRequest request);
+    void confirmarEntrega(
+            @PathVariable("tipo") String tipo, @RequestBody ConfirmarEntregaRequest request);
 
     record CantidadResponse(BigDecimal valor, String unidad) {}
-    record ResiduoResponse(Long id, String tipo, CantidadResponse cantidad, String estado, Long entregaId) {}
+
+    record ResiduoResponse(
+            Long id, String tipo, CantidadResponse cantidad, String estado, Long entregaId) {}
+
     record ConfirmarEntregaRequest(Long entregaId, List<Long> residuosIds) {}
 }

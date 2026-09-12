@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(name = "msvc-historial-mantenimiento", url = "${clients.historial.url}")
 public interface HistorialClientRest {
+
     @GetMapping("/{vehiculoId}/resumen")
     ResumenHistorialRemoto resumen(@PathVariable Long vehiculoId);
 }

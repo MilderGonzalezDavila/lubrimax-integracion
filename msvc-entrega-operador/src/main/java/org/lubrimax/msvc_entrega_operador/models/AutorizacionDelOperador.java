@@ -23,14 +23,20 @@ public class AutorizacionDelOperador {
     @Column(name = "vigencia_hasta", nullable = false)
     private LocalDate hasta;
 
-    protected AutorizacionDelOperador() {
-    }
+    protected AutorizacionDelOperador() {}
 
-    public AutorizacionDelOperador(String ruc, String razonSocial, String registroEors,
-                                   LocalDate desde, LocalDate hasta) {
-        if (ruc == null || ruc.isBlank() || razonSocial == null || razonSocial.isBlank()
-                || registroEors == null || registroEors.isBlank() || desde == null || hasta == null) {
-            throw new IllegalArgumentException("Los datos de autorizacion del operador son obligatorios");
+    public AutorizacionDelOperador(
+            String ruc, String razonSocial, String registroEors, LocalDate desde, LocalDate hasta) {
+        if (ruc == null
+                || ruc.isBlank()
+                || razonSocial == null
+                || razonSocial.isBlank()
+                || registroEors == null
+                || registroEors.isBlank()
+                || desde == null
+                || hasta == null) {
+            throw new IllegalArgumentException(
+                    "Los datos de autorizacion del operador son obligatorios");
         }
         this.ruc = ruc;
         this.razonSocial = razonSocial;
@@ -43,9 +49,23 @@ public class AutorizacionDelOperador {
         return fecha != null && !fecha.isBefore(desde) && !fecha.isAfter(hasta);
     }
 
-    public String getRuc() { return ruc; }
-    public String getRazonSocial() { return razonSocial; }
-    public String getRegistroEors() { return registroEors; }
-    public LocalDate getDesde() { return desde; }
-    public LocalDate getHasta() { return hasta; }
+    public String getRuc() {
+        return ruc;
+    }
+
+    public String getRazonSocial() {
+        return razonSocial;
+    }
+
+    public String getRegistroEors() {
+        return registroEors;
+    }
+
+    public LocalDate getDesde() {
+        return desde;
+    }
+
+    public LocalDate getHasta() {
+        return hasta;
+    }
 }

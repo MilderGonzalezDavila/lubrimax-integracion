@@ -15,15 +15,15 @@ public class PeriodoDeVigencia {
     @Column(name = "vigencia_hasta", nullable = false)
     private LocalDate hasta;
 
-    protected PeriodoDeVigencia() {
-    }
+    protected PeriodoDeVigencia() {}
 
     public PeriodoDeVigencia(LocalDate desde, LocalDate hasta) {
         if (desde == null || hasta == null) {
             throw new IllegalArgumentException("El periodo de vigencia es obligatorio");
         }
         if (hasta.isBefore(desde)) {
-            throw new IllegalArgumentException("La fecha final no puede ser anterior a la fecha inicial");
+            throw new IllegalArgumentException(
+                    "La fecha final no puede ser anterior a la fecha inicial");
         }
         this.desde = desde;
         this.hasta = hasta;
@@ -46,8 +46,12 @@ public class PeriodoDeVigencia {
 
     @Override
     public boolean equals(Object otro) {
-        if (this == otro) return true;
-        if (!(otro instanceof PeriodoDeVigencia periodo)) return false;
+        if (this == otro) {
+            return true;
+        }
+        if (!(otro instanceof PeriodoDeVigencia periodo)) {
+            return false;
+        }
         return Objects.equals(desde, periodo.desde) && Objects.equals(hasta, periodo.hasta);
     }
 

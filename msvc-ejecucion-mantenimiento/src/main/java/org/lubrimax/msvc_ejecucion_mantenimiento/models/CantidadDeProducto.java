@@ -14,18 +14,23 @@ public class CantidadDeProducto {
     @Column(nullable = false, length = 20)
     private String unidad;
 
-    protected CantidadDeProducto() {
-    }
+    protected CantidadDeProducto() {}
 
     public CantidadDeProducto(BigDecimal valor, String unidad) {
         if (valor == null || valor.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("La cantidad de producto debe ser mayor que cero");
         }
-        if (unidad == null || unidad.isBlank()) throw new IllegalArgumentException("La unidad es obligatoria");
+        if (unidad == null || unidad.isBlank())
+            throw new IllegalArgumentException("La unidad es obligatoria");
         this.valor = valor;
         this.unidad = unidad.trim().toUpperCase();
     }
 
-    public BigDecimal getValor() { return valor; }
-    public String getUnidad() { return unidad; }
+    public BigDecimal getValor() {
+        return valor;
+    }
+
+    public String getUnidad() {
+        return unidad;
+    }
 }

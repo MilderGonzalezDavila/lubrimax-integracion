@@ -1,8 +1,8 @@
 package org.lubrimax.msvc_operador_autorizado.models;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -13,11 +13,9 @@ public class AutorizacionDelOperador {
     @Column(name = "registro_eors", nullable = false, unique = true)
     private String registroEors;
 
-    @Embedded
-    private PeriodoDeVigencia periodoDeVigencia;
+    @Embedded private PeriodoDeVigencia periodoDeVigencia;
 
-    protected AutorizacionDelOperador() {
-    }
+    protected AutorizacionDelOperador() {}
 
     public AutorizacionDelOperador(String registroEors, PeriodoDeVigencia periodoDeVigencia) {
         if (registroEors == null || registroEors.isBlank()) {
@@ -44,8 +42,12 @@ public class AutorizacionDelOperador {
 
     @Override
     public boolean equals(Object otro) {
-        if (this == otro) return true;
-        if (!(otro instanceof AutorizacionDelOperador autorizacion)) return false;
+        if (this == otro) {
+            return true;
+        }
+        if (!(otro instanceof AutorizacionDelOperador autorizacion)) {
+            return false;
+        }
         return Objects.equals(registroEors, autorizacion.registroEors)
                 && Objects.equals(periodoDeVigencia, autorizacion.periodoDeVigencia);
     }
