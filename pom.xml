@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.1.1</version>
+        <version>3.3.4</version>
         <relativePath/>
     </parent>
 
@@ -16,10 +16,24 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
+        <java.version>17</java.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring-cloud.version>2023.0.3</spring-cloud.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <packaging>pom</packaging>
     <modules>
@@ -33,7 +47,6 @@
         <module>msvc-entrega-operador</module>
         <module>msvc-historial-mantenimiento</module>
         <module>msvc-inventario</module>
-        <module>msvc-operador-autorizado</module>
         <module>msvc-orden-servicio</module>
         <module>msvc-politicas</module>
         <module>msvc-proveedor</module>

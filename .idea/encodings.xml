@@ -5,13 +5,17 @@
     <file url="file://$PROJECT_DIR$/msvc-acopio-temporal/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/msvc-agenda-tecnico/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/msvc-auditorias/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/msvc-clientes/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/msvc-ejecucion-mantenimiento/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/msvc-entrega-operador/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/msvc-historial-mantenimiento/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/msvc-inventario/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/msvc-operador-autorizado/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/msvc-orden-servicio/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/msvc-politicas/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/msvc-proveedor/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/msvc-usuarios/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/msvc-vehiculos/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
   </component>
