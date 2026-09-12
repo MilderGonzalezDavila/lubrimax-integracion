@@ -23,17 +23,21 @@
 
     <packaging>pom</packaging>
     <modules>
+        <module>msvc-abastecimiento</module>
+        <module>msvc-acopio-temporal</module>
+        <module>msvc-agenda-tecnico</module>
+        <module>msvc-auditorias</module>
+        <module>msvc-clientes</module>
+        <module>msvc-ejecucion-mantenimiento</module>
         <module>msvc-operador-autorizado</module>
         <module>msvc-entrega-operador</module>
-        <module>msvc-agenda-tecnico</module>
-        <module>msvc-acopio-temporal</module>
-        <module>msvc-ejecucion-mantenimiento</module>
-        <module>msvc-abastecimiento</module>
-        <module>msvc-inventario</module>
-        <module>msvc-proveedor</module>
-        <module>msvc-clientes</module>
         <module>msvc-historial-mantenimiento</module>
+        <module>msvc-inventario</module>
+        <module>msvc-operador-autorizado</module>
         <module>msvc-orden-servicio</module>
+        <module>msvc-politicas</module>
+        <module>msvc-proveedor</module>
+        <module>msvc-usuarios</module>
         <module>msvc-vehiculos</module>
     </modules>
 </project>
