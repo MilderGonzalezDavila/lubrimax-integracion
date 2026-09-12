@@ -1,10 +1,48 @@
-HELP.md
+### Maven & Gradle Builds ###
 target/
-.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+bin/
+out/
+.gradle/
+.kotlin
 
-### STS ###
+### Spring Boot & Microservices ###
+# Ignorar perfiles locales y secretos
+application-local.yml
+application-local.properties
+application-*-local.yml
+.env
+.env.*
+
+# Logs y trazas de red
+*.log
+logs/
+*.out
+
+# Generación automática de código y mocks
+target/generated-sources/
+target/generated-test-sources/
+wiremock/
+stubs/
+.wiremock/
+HELP.md
+
+### IntelliJ IDEA (Permite compartir configuraciones de ejecución) ###
+.idea/*
+!.idea/runConfigurations/
+*.iws
+*.iml
+*.ipr
+
+### VS Code ###
+.vscode/*
+!.vscode/launch.json
+
+### Eclipse & STS ###
 .apt_generated
 .classpath
 .factorypath
@@ -13,21 +51,14 @@ target/
 .springBeans
 .sts4-cache
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-### VS Code ###
-.vscode/
+### Operating Systems ###
+.DS_Store
+Thumbs.db
+*.tmp
