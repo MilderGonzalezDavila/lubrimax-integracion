@@ -1,4 +1,4 @@
-### Compiled y Build Outputs (Maven y Gradle) ###
+### Compiled & Build Outputs (Maven y Gradle) ###
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
@@ -11,30 +11,31 @@ bin/
 out/
 .kotlin
 
-### Microservices y Spring Boot (OpenFeign y Config) ###
-# Perfiles locales y variables de entorno
+### Microservices & Spring Boot ###
+# Solo ignora configuraciones locales personalizadas
 application-local.yml
 application-local.properties
 application-*-local.yml
 .env
 .env.*
 
-# Logs de trazabilidad de red y depuración Feign
+# Logs
 *.log
 logs/
 *.out
 
-# Código generado por OpenAPI, Swagger y MapStruct
+# Código generado automáticamente
 target/generated-sources/
 target/generated-test-sources/
 
-# Testing de contratos y mocks HTTP
+# Mocks y temporales
 wiremock/
 stubs/
 .wiremock/
 
-### IntelliJ IDEA ###
-.idea/
+### IntelliJ IDEA (Configurado para compartir botones de ejecución) ###
+.idea/*
+!.idea/runConfigurations/
 *.iws
 *.iml
 *.ipr
@@ -56,7 +57,8 @@ stubs/
 /.nb-gradle/
 
 ### VS Code ###
-.vscode/
+.vscode/*
+!.vscode/launch.json
 
 ### Operating Systems ###
 .DS_Store
